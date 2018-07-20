@@ -28,10 +28,9 @@ importData <-
            scanID = 1,
            output = T,
            removeOutliers = T) {
-
     # read target file --------------------------------------------------------
     targets <- limma::readTargets(file = targetfile, sep = "\t")
-    targets <- targets[targets$scan_ID == scanID, ]
+    targets <- targets[targets$scan_ID == scanID,]
 
     # create unique names based on concentration and time ---------------------
     targets$names <-
@@ -81,7 +80,7 @@ importData <-
     #select outlier arrays
     iqrs <- apply(log2(raw$E), MARGIN = 2, IQR)
     int <-
-      findInterval(iqrs, vec = c(median(iqrs) - (2 * sd(iqrs)), median(iqrs) +
+      findInterval(iqrs, vec = c(mean(iqrs) - (2 * sd(iqrs)), mean(iqrs) +
                                    (2 * sd(iqrs))))
 
     exclude <- c(which(int != 1))
@@ -119,7 +118,7 @@ importData <-
         JX = "targets",
         I = NULL
       )
-    targets <- targets[include, ]
+    targets <- targets[include,]
 
 
     #
@@ -277,9 +276,8 @@ importData <-
 
 # targetfile <- "./rawdata/Diclofenac/targetsfile_diclofenac.csv"
 # datadir <- "./rawdata/Diclofenac/ArrayData/"
-#
 # test1 <- importData(targetfile = targetfile, datadir = datadir)
-
-# targetfile <- "./rawdata/Diclofenac/targetsfile_diclofenac.csv"
-# datadir <- "./rawdata/Diclofenac/ArrayData/"
+#
+# targetfile <- "./rawdata/Diuron/targetsfile_Diuron.csv"
+# datadir <- "./rawdata/Diuron/ArrayData/"
 # test2 <- importData(targetfile = targetfile, datadir = datadir)
