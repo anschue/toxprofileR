@@ -1,13 +1,24 @@
 #' Import Array Data
-#' @description This function builds on the limma function read.maimages and imports raw data from a time and concentration dependent toxicogenomic experiment. It removes outlier arrays based on the IQR distribution and returns an EListRaw.
 #'
-#' @param targetfile string, name of targetfile .csv, should contain columns named FileName, sample_ID,	concentration_level,	concentration_umol_l,	time_hpe,	type, comment, and	scan_ID
+#' @description This function builds on the limma function read.maimages and
+#' imports raw data from a time and concentration dependent toxicogenomic
+#' experiment. It removes outlier arrays based on the IQR distribution and
+#' returns an EListRaw.
+#'
+#' @param targetfile string, name of targetfile .csv, should contain columns
+#' named FileName, sample_ID,	concentration_level,	concentration_umol_l,
+#' time_hpe,	type, comment, and	scan_ID
+#'
 #' @param datadir string, path to raw data
+#'
 #' @param scanID numerical, ID of scan (default: 1)
+#'
 #' @param output logical, should function return target (default: T)
+#'
 #' @param removeOutliers logical, should outliers be removed
 #'
 #' @return EListraw (limma class)
+#'
 #' @export
 #'
 #'
@@ -17,11 +28,12 @@ importData <-
            scanID = 1,
            output = T,
            removeOutliers = T) {
-    # read target file -------------------------------------------
+
+    # read target file --------------------------------------------------------
     targets <- limma::readTargets(file = targetfile, sep = "\t")
     targets <- targets[targets$scan_ID == scanID, ]
 
-    # create unique names based on concentration and time --------------------
+    # create unique names based on concentration and time ---------------------
     targets$names <-
       make.names(
         paste(
@@ -33,7 +45,7 @@ importData <-
         unique = T
       )
 
-    # read rawdata --------------------------------------------------------------
+    # read rawdata ------------------------------------------------------------
     rawdata <- limma::read.maimages(
       files = targets,
       source = "agilent",
@@ -60,12 +72,12 @@ importData <-
 
     raw <- rawdata
 
-    # output target table -----------------------------
+    # output target table -----------------------------------------------------
     if (output) {
       knitr::kable(targets)
     }
 
-    # remove outlier array(s) -------------------------
+    # remove outlier array(s) -------------------------------------------------
     #select outlier arrays
     iqrs <- apply(log2(raw$E), MARGIN = 2, IQR)
     int <-
@@ -266,4 +278,8 @@ importData <-
 # targetfile <- "./rawdata/Diclofenac/targetsfile_diclofenac.csv"
 # datadir <- "./rawdata/Diclofenac/ArrayData/"
 #
-# test <- importData(targetfile = targetfile, datadir = datadir)
+# test1 <- importData(targetfile = targetfile, datadir = datadir)
+
+# targetfile <- "./rawdata/Diclofenac/targetsfile_diclofenac.csv"
+# datadir <- "./rawdata/Diclofenac/ArrayData/"
+# test2 <- importData(targetfile = targetfile, datadir = datadir)
