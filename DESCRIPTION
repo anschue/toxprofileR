@@ -1,11 +1,18 @@
 Package: toxprofileR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Functions for Retrieving Dynamic Toxicogenomic Fingerprints
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+date: 2018-07-23
+Author: person("Andreas", "Schuettler", email = "andreas.schuettler@ufz.de", role = c("aut", "cre"), 
+    comment = c(ORCID = "0000-0003-3823-1667"))
+Description: This package supplies functions to import, process and analyze time and concentration resolved microarray data retrieved after exposure to chemicals.
+License: GPL-3
 Encoding: UTF-8
-LazyData: true
+LazyData: false
+Imports: limma,
+         mgcv,
+         outliers,
+         ggplot2,
+         nlme,
+         pbapply
+RoxygenNote: 6.0.1
