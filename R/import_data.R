@@ -26,7 +26,6 @@
 importData <-
   function(targetfile,
            datadir,
-           substance,
            scanID = 1,
            output = T,
            removeOutliers = T) {
@@ -38,7 +37,7 @@ importData <-
     targets$names <-
       make.names(
         paste(
-          targets$substance
+          targets$substance,
           targets$concentration_level,
           targets$time_hpe,
           targets$type,
