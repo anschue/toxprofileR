@@ -9,7 +9,8 @@
 #'
 normalizeBatch <- function(dslist, method = "cyclicloess", output = T){
 
-  # check if probe names are in the same order---------------------------------
+    if(length(dslist)>1){
+   # check if probe names are in the same order---------------------------------
    lapply(1:(length(dslist)-1),function(id){
     if(!identical(dslist[[id]]$genes$ProbeName,dslist[[id+1]]$genes$ProbeName)){stop("Probes not in the same order")}
    })
@@ -30,7 +31,9 @@ normalizeBatch <- function(dslist, method = "cyclicloess", output = T){
     ds <- new("EList", lapply(dslist[[id]],function(x){return(x)}))
     ds[["E"]] <- common.cloess[,start_id:end_id]
     return(ds)
-  })
+  })}else{
+      dslist_norm<-list(limma::normalizeBetweenArrays(dslist[[1]],method=method))
+}
 
   return(dslist_norm)
 }
