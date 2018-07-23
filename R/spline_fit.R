@@ -8,6 +8,7 @@
 spline_fit <- function(elist) {
     library("mgcv")
     library("outliers")
+    library("pbapply")
 
     #define probe/concentration/time vectors-----------------------------------
     probes <-
@@ -28,7 +29,7 @@ spline_fit <- function(elist) {
     probes$ProbeID <- rownames(probes)
 
     #fit spline--------------------------------------------------------------------
-    splineprobes <- apply(probes, 1, function(gene, conc_all,time_all,timen_all) {
+    splineprobes <- pbapply::pbapply(probes, 1, function(gene){
 
         #get concentration vector--------------------------------------------------
         conc <- conc_all
