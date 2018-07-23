@@ -87,6 +87,9 @@ spline_fit <- function(elist) {
                                  genes = elist$genes
                              ))
 
+    splineprobes_list$targets$concentration_level <- as.factor(paste0("C",as.numeric(ordered(splineprobes_list$targets$concentration_umol_l))))
+    splineprobes_list$targets$names <- make.names(paste(splineprobes_list$targets$concentration_level,splineprobes_list$targets$time_hpe,sep="_"))
+
     return(splineprobes_list)
 
 }
