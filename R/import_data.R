@@ -6,7 +6,7 @@
 #' returns an EListRaw.
 #'
 #' @param targetfile string, name of targetfile .csv, should contain columns
-#' named FileName, sample_ID,	concentration_level,	concentration_umol_l,
+#' named FileName, sample_ID,	substance, concentration_level,	concentration_umol_l,
 #' time_hpe,	type, comment, and	scan_ID
 #'
 #' @param datadir string, path to raw data
@@ -17,6 +17,7 @@
 #'
 #' @param removeOutliers logical, should outliers be removed
 #'
+#'
 #' @return EListraw (limma class)
 #'
 #' @export
@@ -25,6 +26,7 @@
 importData <-
   function(targetfile,
            datadir,
+           substance,
            scanID = 1,
            output = T,
            removeOutliers = T) {
@@ -36,6 +38,7 @@ importData <-
     targets$names <-
       make.names(
         paste(
+          targets$substance
           targets$concentration_level,
           targets$time_hpe,
           targets$type,
@@ -281,3 +284,7 @@ importData <-
 # targetfile <- "./rawdata/Diuron/targetsfile_Diuron.csv"
 # datadir <- "./rawdata/Diuron/ArrayData/"
 # test2 <- importData(targetfile = targetfile, datadir = datadir)
+
+# targetfile <- "./rawdata/Mix13/targetsfile_mix13.csv"
+# datadir <- "./rawdata/Mix13/ArrayData/"
+# test3 <- importData(targetfile = targetfile, datadir = datadir)
