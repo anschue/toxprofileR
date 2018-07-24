@@ -9,6 +9,7 @@ spline_fit <- function(elist) {
     library("mgcv")
     library("outliers")
     library("pbapply")
+    library("limma")
 
     #define probe/concentration/time vectors-----------------------------------
     probes <-
@@ -30,7 +31,7 @@ spline_fit <- function(elist) {
 
     #fit spline--------------------------------------------------------------------
     splineprobes <- pbapply::pbapply(probes, 1, function(gene){
-
+        ProbeID <- gene["ProbeID"]
         #get concentration vector--------------------------------------------------
         conc <- conc_all
         time <- time_all
@@ -66,8 +67,10 @@ spline_fit <- function(elist) {
         expldata$ltime <- log(expldata$time)
 
         #####fit thin plate ("tp") spline############
-        what = mgcv::gam(formula = logFC ~ te(ldose, ltime, bs = "tp"),
-                         data = expldata[expldata$dose != 0,])
+        tryCatch({what = mgcv::gam(formula = logFC ~ te(ldose, ltime, bs = "tp"),
+                         data = expldata[expldata$dose != 0,])}, error = function(e){
+                             message(paste("error at probe", ProbeID))
+                         })
 
         splinedata <-
             expand.grid(ldose = unique(log(conc_all[conc_all != 0])), ltime = unique(log(timen_all[conc_all !=
@@ -77,7 +80,7 @@ spline_fit <- function(elist) {
     })
 
 
-    splineprobes_list <- new("Elist",
+    splineprobes_list <- new("EList",
                              list(
                                  E = t(splineprobes),
                                  targets = expand.grid(
