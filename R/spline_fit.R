@@ -25,6 +25,8 @@ spline_fit <- function(elist) {
     elist$targets$time_hpe[elist$targets$type !=
       "recovery"]
 
+  substance <- elist$targets$substance
+
   concentrations <- sort(unique(conc_all[conc_all != 0]), decreasing = T)
   annotation <- elist$genes
   probes$ProbeID <- rownames(probes)
@@ -96,8 +98,9 @@ spline_fit <- function(elist) {
     )
   )
 
+  splineprobes_list$targets$substance <- substance
   splineprobes_list$targets$concentration_level <- as.factor(paste0("C", as.numeric(ordered(splineprobes_list$targets$concentration_umol_l))))
-  splineprobes_list$targets$names <- make.names(paste(splineprobes_list$targets$concentration_level, splineprobes_list$targets$time_hpe, sep = "_"))
+  splineprobes_list$targets$names <- make.names(paste(splineprobes_list$targets$substance,splineprobes_list$targets$concentration_level, splineprobes_list$targets$time_hpe, sep = "_"))
 
   return(splineprobes_list)
 }
