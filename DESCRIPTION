@@ -8,7 +8,7 @@ Author: person("Andreas", "Schuettler", email = "andreas.schuettler@ufz.de", rol
 Description: This package supplies functions to import, process and analyze time and concentration resolved microarray data retrieved after exposure to chemicals.
 License: GPL-3
 Encoding: UTF-8
-LazyData: false
+LazyData: true
 Imports: limma,
          mgcv,
          outliers,
