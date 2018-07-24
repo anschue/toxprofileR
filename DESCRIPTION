@@ -9,11 +9,16 @@ Description: This package supplies functions to import, process and analyze time
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: limma,
-         mgcv,
-         outliers,
-         ggplot2,
-         nlme,
-         pbapply,
-         sva
+Imports:
+    limma (>= 3.34.9),
+    mgcv (>= 1.8.24),
+    outliers (>= 0.14),
+    ggplot2 (>= 3.0.0),
+    nlme (>= 3.1.137),
+    pbapply (>= 1.3.4),
+    sva (>= 3.26.0),
+    tictoc (>= 1.0)
 RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
