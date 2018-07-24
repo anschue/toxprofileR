@@ -14,5 +14,6 @@ Imports: limma,
          outliers,
          ggplot2,
          nlme,
-         pbapply
+         pbapply,
+         sva
 RoxygenNote: 6.0.1
