@@ -24,7 +24,7 @@ elist.median <- function(data) {
   }
 
 
-  ##calculate scores for quality flags
+  ## calculate scores for quality flags
   scores <-
     data$isNonUniform + data$isNonUniform + data$isPopOutlier + data$isPopOutlier +
     data$isNonUniformBG
@@ -36,7 +36,7 @@ elist.median <- function(data) {
     minscores[match(x = data$genes$ProbeName, table = minscores$Group.1), -1]
 
   scores <- as.data.frame(scores)
-  flag = minscores_all < scores   ###flag those probes that have a higher score than the minimum of that probe-type
+  flag <- minscores_all < scores ### flag those probes that have a higher score than the minimum of that probe-type
 
   exprs.df[flag] <- NA
   apply(
@@ -56,9 +56,10 @@ elist.median <- function(data) {
   # Calculate median for all probes that are spotted more than once on array
   exprs.df.ag <-
     aggregate(exprs.df[, 1:length(colnames(exprs.df)) - 1],
-              by = list(exprs.df$Name),
-              median,
-              na.rm = T)
+      by = list(exprs.df$Name),
+      median,
+      na.rm = T
+    )
 
   apply(
     exprs.df.ag[, -1],

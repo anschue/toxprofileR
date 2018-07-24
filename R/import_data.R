@@ -25,13 +25,13 @@
 #'
 importData <-
   function(targetfile,
-           datadir,
-           scanID = 1,
-           output = T,
-           removeOutliers = T) {
+             datadir,
+             scanID = 1,
+             output = T,
+             removeOutliers = T) {
     # read target file --------------------------------------------------------
     targets <- limma::readTargets(file = targetfile, sep = "\t")
-    targets <- targets[targets$scan_ID == scanID,]
+    targets <- targets[targets$scan_ID == scanID, ]
 
     # create unique names based on concentration and time ---------------------
     targets$names <-
@@ -54,14 +54,14 @@ importData <-
       names = targets$names,
       green.only = T,
       columns = list(
-        E = 'gProcessedSignal',
+        E = "gProcessedSignal",
         Processederror = "gProcessedSigError",
-        Median = 'gMedianSignal',
-        Medianb = 'gBGMedianSignal',
-        processedSignal = 'gProcessedSignal',
-        isNonUniform = 'gIsFeatNonUnifOL',
+        Median = "gMedianSignal",
+        Medianb = "gBGMedianSignal",
+        processedSignal = "gProcessedSignal",
+        isNonUniform = "gIsFeatNonUnifOL",
         isNonUniformBG = "gIsBGNonUnifOL",
-        isPopOutlier = 'gIsFeatPopnOL',
+        isPopOutlier = "gIsFeatPopnOL",
         isPopOutlierBG = "gIsBGPopnOL",
         manualFlag = "IsManualFlag",
         posandsigf = "gIsPosAndSignif",
@@ -69,7 +69,7 @@ importData <-
         bgSubSignal = "gBGSubSignal"
       )
     )
-    ##not covered: SpotExtentX  gBGMeanSignal
+    ## not covered: SpotExtentX  gBGMeanSignal
 
     raw <- rawdata
 
@@ -79,11 +79,11 @@ importData <-
     }
 
     # remove outlier array(s) -------------------------------------------------
-    #select outlier arrays
+    # select outlier arrays
     iqrs <- apply(log2(raw$E), MARGIN = 2, IQR)
     int <-
       findInterval(iqrs, vec = c(mean(iqrs) - (2 * sd(iqrs)), mean(iqrs) +
-                                   (2 * sd(iqrs))))
+        (2 * sd(iqrs))))
 
     exclude <- c(which(int != 1))
     include <- c(1:length(iqrs))
@@ -92,9 +92,9 @@ importData <-
     group <- rep("include", length(iqrs))
     group[exclude] <- "exclude"
     limma::plotDensities((log2(raw$E)),
-                         legend = T,
-                         group = group,
-                         col = c(2, "grey")
+      legend = T,
+      group = group,
+      col = c(2, "grey")
     )
 
     rawdata <-
@@ -120,7 +120,7 @@ importData <-
         JX = "targets",
         I = NULL
       )
-    targets <- targets[include,]
+    targets <- targets[include, ]
 
 
     #
@@ -270,11 +270,10 @@ importData <-
     #     }
 
     return(rawdata)
-
   }
 
 
-##Test
+## Test
 
 # targetfile <- "./rawdata/Diclofenac/targetsfile_diclofenac.csv"
 # datadir <- "./rawdata/Diclofenac/ArrayData/"
