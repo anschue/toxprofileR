@@ -13,7 +13,7 @@ preprocess <- function(elist, batchcorrect = F, batch){
 
 elist.avg <- elist.median(elist)
 
-load(file="./rawdata/Annotation/mapComplete.Rd") ##load map created with "unambigousArrayAnnot.R"
+map <- new_annotation ##load map created with "unambigousArrayAnnot.R"
 elist.avg$genes <- cbind(elist.avg$genes,map[match(x = elist.avg$genes$ProbeName,table = map$ProbeID),c("ProbeID","EnsemblID","wikigene_name","entrezgene","ensembl_gene_id","unique")])
 
 if(batchcorrect){
