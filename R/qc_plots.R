@@ -7,14 +7,13 @@
 qc_plots <- function(elist) {
 
   # boxplot----------------------------------------------------------------------
-  boxplot(elist$E, ylim = c(0, 20))
+  boxplot(elist$E, ylim = c(0, 20), ylab = "Data distribution\n with dark and bright corners (red)")
+  points(elist$E[elist$genes$ProbeName == "GE_BrightCorner", ], ylim = c(0, 20), pch=24,bg="red")
+  points(elist$E[elist$genes$ProbeName == "DarkCorner", ], ylim = c(0, 20), pch = 25, bg= "red")
+
 
   # density plot-----------------------------------------------------------------
   limma::plotDensities(elist$E, legend = F)
-
-  # control probes---------------------------------------------------------------
-  boxplot(elist$E[elist$genes$ProbeName == "GE_BrightCorner", ], ylim = c(0, 20), xlab = "Samples", ylab = "log2 Expression Bright Corners")
-  boxplot(elist$E[elist$genes$ProbeName == "DarkCorner", ], ylim = c(0, 20), xlab = "Samples", ylab = "log2 Expression Dark Corners")
 
   # Spike ins--------------------------------------------------------------------
   data <- elist
