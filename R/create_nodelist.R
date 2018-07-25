@@ -3,6 +3,7 @@
 #' @param elist An limma EList object with normalized logFC values
 #'
 #' @return A List with logFC values for each node of the toxicogenomic universe
+#' @export
 create_nodelist <- function(elist){
 
 nodeframe_elist <- nodeframe[!is.na(nodeframe$ProbeID),]
