@@ -6,6 +6,8 @@
 #' @export
 qc_plots <- function(elist) {
 
+  library("limma")
+
   # boxplot----------------------------------------------------------------------
   boxplot(elist$E, ylim = c(0, 20), ylab = "Data distribution\n with dark and bright corners (red)")
   points(elist$E[elist$genes$ProbeName == "GE_BrightCorner", ], ylim = c(0, 20), pch=24,bg="red")
@@ -34,5 +36,5 @@ qc_plots <- function(elist) {
 
   # MDS plots--------------------------------------------------------------------
 
-  plotMDS(elist$E, labels = elist$targets$names, col = as.numeric(as.factor(elist$targets$type)), main = "Cloess norm")
+  limma::plotMDS(elist$E, labels = elist$targets$names, col = as.numeric(as.factor(elist$targets$type)), main = "Cloess norm")
 }
