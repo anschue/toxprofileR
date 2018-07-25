@@ -121,12 +121,15 @@ create_tox_universe <-
     )
     tictoc::toc()
 
+    nodeframe <- data.frame(ensembl = rownames(som_model$data[[1]]), toxnode = som_model$unit.classif)
+    nodeframe <-  merge.data.frame(nodeframe, ProbeIDs_metalogFC, by="ensembl", all.x = T, all.y = F, sort = T)
+
+
     resultlist <- list(
       som_model = som_model,
-      dataset.SOM = dataset.SOM,
       metadata = metadata,
       comparisons_merge = comparisons_merge,
-      ProbeIDs_metalogFC = ProbeIDs_metalogFC
+      nodeframe = nodeframe
     )
 
     if (output) {
@@ -134,6 +137,7 @@ create_tox_universe <-
       plot(som_model, type = "count")
       plot(som_model, type = "dist.neighbours")
       plot(som_model, type = "codes")
+      hist(table(nodeframe$toxnode),main = "Number of genes per toxnode",xlab = "Gene count")
     }
 
     return(resultlist)
