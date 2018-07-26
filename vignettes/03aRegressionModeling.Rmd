@@ -26,12 +26,24 @@ First we load the logFC data (see `Part 1- Loading and preprocessing microarray 
 
 ```{r extrema}
 
+library("toxprofileR")
+
 for(substance in c("diuron","diclofenac","naproxen")){
     
     load(file = paste0("./data/",substance,"/data_logfc_",substance,".Rd"))
+}
 
-
+dslist <- list(data_diuron_logFC,
+               data_diclofenac_logFC,
+               data_naproxen_logFC)
+    
+extrema <- toxprofileR::get_extrema_nodes(dslist)
+    
+save(extrema, file = "./data/all/node_extrema.Rd")
+    
 ```
+
+
 
 ##Session Info
 ```{r session info, echo=FALSE}

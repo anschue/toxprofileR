@@ -37,15 +37,15 @@ First, we create a folder in our working directory called "data" and a folder fo
 
 For each substance we need a tab-separated target file in `.csv` format containing the following columns:
 
-- `FileName`: Names of the raw data file
-- `sample_ID`: ID of experimental sample
-- `substance`: Name of substance
-- `concentration_level`: "Control", "C1", "C2", ..., "Cn" for increasing concentrations applied
-- `concentration_umol_l`: Concentration of applied substance in µmol/L
-- `time_hpe`: Time of measurement after exposure
-- `type`: "treatment", "control" or "recovery"
-- `comment`: additional comments
-- `scan_ID`: scanID (1 if there was only one scan)
+* `FileName`: Names of the raw data file
+* `sample_ID`: ID of experimental sample
+* `substance`: Name of substance
+* `concentration_level`: "Control", "C1", "C2", ..., "Cn" for increasing concentrations applied
+* `concentration_umol_l`: Concentration of applied substance in µmol/L
+* `time_hpe`: Time of measurement after exposure
+* `type`: "treatment", "control" or "recovery"
+* `comment`: additional comments
+* `scan_ID`: scanID (1 if there was only one scan)
 
 Next we can use the function `importData` to import the raw data into R and remove outlier arrays based on their interquartile range. If the iqr of an array deviates more than two standard deviations from the population mean (of iqrs) it is removed. 
 
@@ -123,4 +123,9 @@ for(substance in c("diuron","diclofenac","naproxen")){
 
     save(list = paste("data",substance,"logFC",sep = "_"), file = paste0("./data/",substance,"/data_logfc_",substance,".Rd"))
 }
+```
+
+##Session Info
+```{r session info, echo=FALSE}
+devtools::session_info()
 ```
