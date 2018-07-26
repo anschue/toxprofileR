@@ -1,10 +1,10 @@
 ---
-title: "Creating dynamic toxicogenomic fingerprints"
+title: "Part 1 - Loading and preprocessing microarray data"
 author: "Andreas Schüttler"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Creating dynamic toxicogenomic fingerprints}
+  %\VignetteIndexEntry{Part 1- Loading and preprocessing microarray data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 The package `toxprofileR` mainly builds on the packages `limma`, `kohonen` and `hydromad` to supply functions for creating dynamic toxicogenomic fingerprints. The package currently only works with data from Agilent based zebrafish microarrays designed by Oaklabs.
+This vignette describes how the data is (should be) generated and how the package can be used to load and preprocess the data to retrieve logFC data.
 
 # Experiment
 ## Experimental design
@@ -100,10 +101,12 @@ In the end of data preprocessing we check the quality of the data with some anal
 ```{r qcplot diuron}
 toxprofileR::qc_plots(data_proc_diuron)
 ```
+
 ### Diclofenac
 ```{r qc plot diclofenac}
 toxprofileR::qc_plots(data_proc_diclofenac)
 ```
+
 ### Naproxen
 ```{r qc plot naproxen}
 toxprofileR::qc_plots(data_proc_naproxen)
