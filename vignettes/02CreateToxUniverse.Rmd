@@ -44,7 +44,8 @@ The logFC values which are spine-smoothed now (and do not contain any replicates
 tox_universe <- create_tox_universe(dslist = list(data_diuron_logFC_smooth,
                                                   data_diclofenac_logFC_smooth,
                                                   data_naproxen_logFC_smooth),
-                                    output = T)
+                                    output = T,
+                                    seed = 2312)
 
 save(tox_universe, file="./data/all/tox_universe.Rd")
 ```
