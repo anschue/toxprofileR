@@ -60,5 +60,6 @@ maxnodes_all<-apply(maxnodes,MARGIN = 1,FUN = max)
 extnodes_all<-maxnodes_all
 extnodes_all[abs(minnodes_all)>maxnodes_all&!is.na(maxnodes_all)]<-minnodes_all[abs(minnodes_all)>maxnodes_all&!is.na(maxnodes_all)]
 
-data.frame(min = minnodes_all, max = maxnodes_all, ext = extnodes_all)
+extrema <- data.frame(min = minnodes_all, max = maxnodes_all, ext = extnodes_all)
+return(extrema)
 }
