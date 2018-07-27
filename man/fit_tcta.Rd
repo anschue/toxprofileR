@@ -4,7 +4,7 @@
 \alias{fit_tcta}
 \title{Fit regression model on toxicogenomic profile}
 \usage{
-fit_tcta(elist, extrema, cluster = c(TRUE, FALSE))
+fit_tcta(elist, extrema, cluster = c(TRUE, FALSE), cln = 2)
 }
 \arguments{
 \item{elist}{An EList containing normalized logFC values from one exposure experiment.}
