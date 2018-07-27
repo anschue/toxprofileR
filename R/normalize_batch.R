@@ -68,5 +68,3 @@ normalizeBatch <-
 
     return(dslist_norm)
   }
-
-# test_norm<-normalizeBatch(list(test1,test2))

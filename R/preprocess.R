@@ -1,4 +1,3 @@
-
 #' Preprocess Data
 #'
 #' @param elist EList for preprocessing
@@ -17,11 +16,6 @@ preprocess <- function(elist, batchcorrect = F, batch) {
 
   if (batchcorrect) {
     batch <- batch
-
-    # batch[batch!="Oaklabscan"]=1
-    # batch[batch=="Oaklabscan"]=2
-    # batch<-factor(batch)
-
     modcombat <- model.matrix(~factor(elist$targets$time_hpe) * factor(elist$targets$concentration_level), data = elist.avg$targets)
     combat_edata <- sva::ComBat(dat = elist.avg$E, batch = batch, mod = modcombat, par.prior = TRUE, prior.plots = F)
     elist.combat <- elist.avg

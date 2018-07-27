@@ -79,7 +79,6 @@ importData <-
     }
 
     # remove outlier array(s) -------------------------------------------------
-    # select outlier arrays
     iqrs <- apply(log2(raw$E), MARGIN = 2, IQR)
     int <-
       findInterval(iqrs, vec = c(mean(iqrs) - (2 * sd(iqrs)), mean(iqrs) +
@@ -91,11 +90,13 @@ importData <-
 
     group <- rep("include", length(iqrs))
     group[exclude] <- "exclude"
+
+    if(output){
     limma::plotDensities((log2(raw$E)),
       legend = T,
       group = group,
       col = c(2, "grey")
-    )
+    )}
 
     rawdata <-
       limma::subsetListOfArrays(
@@ -122,167 +123,5 @@ importData <-
       )
     targets <- targets[include, ]
 
-
-    #
-    #     below6 <- apply(
-    #       log2(raw$E),
-    #       MARGIN = 2,
-    #       FUN = function(x) {
-    #         sum(x < 6)
-    #       }
-    #     )
-    #     zero <- apply(
-    #       log2(raw$E),
-    #       MARGIN = 2,
-    #       FUN = function(x) {
-    #         sum(x > 0)
-    #       }
-    #     )
-    #     above10 <-
-    #       apply(
-    #         log2(raw$E),
-    #         MARGIN = 2,
-    #         FUN = function(x) {
-    #           sum(x > 10)
-    #         }
-    #       )
-    #
-    #     #remove outlier arrays
-    #     if (substance == "Diuron") {
-    #       include <- c(1:47, 49:64)
-    #       exclude <- 48
-    #
-    #       group <- rep("include", length(above10))
-    #       group[exclude] <- "exclude"
-    #       plotDensities((log2(raw$E)),
-    #                     legend = T,
-    #                     group = group,
-    #                     col = c(2, "grey")
-    #       )
-    #
-    #       rawdata <-
-    #         subsetListOfArrays(
-    #           raw,
-    #           i = c(1:62976),
-    #           j = c(1:47, 49:64),
-    #           IJ = c(
-    #             "E",
-    #             "Processederror",
-    #             "Median",
-    #             "Medianb",
-    #             "isNonUniform",
-    #             "isNonUniformBG",
-    #             "isPopOutlier",
-    #             "isPopOutlierBG",
-    #             "manualFlag",
-    #             "posandsigf",
-    #             "aboveBG",
-    #             "bgSubSignal"
-    #           ),
-    #           IX = "genes",
-    #           JX = "targets",
-    #           I = NULL
-    #         )
-    #     }
-    #
-    #     if (substance == "Diclofenac") {
-    #       exclude <- c(which(as.numeric(above10) > 40000)), 13, 27)
-    #       #exclude <- c(which(int!=1))
-    #       include <- c(1:length(as.numeric(above10)))
-    #       include <- include[!include %in% exclude]
-    #
-    #       group <- rep("include", length(above10))
-    #       group[exclude] <- "exclude"
-    #       limma::plotDensities((log2(raw$E)),
-    #                     legend = T,
-    #                     group = group,
-    #                     col = c(2, "grey")
-    #       )
-    #
-    #       rawdata <-
-    #         subsetListOfArrays(
-    #           raw,
-    #           i = c(1:dim(raw)[1]),
-    #           j = include,
-    #           IJ = c(
-    #             "E",
-    #             "Processederror",
-    #             "Median",
-    #             "Medianb",
-    #             "isNonUniform",
-    #             "isNonUniformBG",
-    #             "isPopOutlier",
-    #             "isPopOutlierBG",
-    #             "manualFlag",
-    #             "posandsigf",
-    #             "aboveBG",
-    #             "bgSubSignal"
-    #           ),
-    #           IX = "genes",
-    #           JX = "targets",
-    #           I = NULL
-    #         )
-    #       targets <- targets[include, ]
-    #     }
-    #
-    #     if (substance == "Naproxen") {
-    #       exclude <-
-    #         c(which(as.numeric(above10) > 40000), which(as.numeric(below6) > 11000))
-    #       include <- c(1:length(as.numeric(above10)))
-    #       include <- include[!include %in% exclude]
-    #       #pdf("./data/Naproxen/QC/density_raw.pdf")
-    #       group <- rep("include", 64)
-    #       group[exclude] <- "exclude"
-    #       plotDensities((log2(raw$E)),
-    #                     legend = T,
-    #                     group = group,
-    #                     col = c(2, "grey")
-    #       )
-    #       rawdata <-
-    #         subsetListOfArrays(
-    #           raw,
-    #           i = c(1:dim(raw)[1]),
-    #           j = include,
-    #           IJ = c(
-    #             "E",
-    #             "Processederror",
-    #             "Median",
-    #             "Medianb",
-    #             "isNonUniform",
-    #             "isNonUniformBG",
-    #             "isPopOutlier",
-    #             "isPopOutlierBG",
-    #             "manualFlag",
-    #             "posandsigf",
-    #             "aboveBG",
-    #             "bgSubSignal"
-    #           ),
-    #           IX = "genes",
-    #           JX = "targets",
-    #           I = NULL
-    #         )
-    #       #dev.off()
-    #       targets <- targets[include, ]
-    #     }
-    #
-    #     if (substance == "Mixture") {
-    #       plotDensities((log2(rawdata$E)), legend = F)
-    #     }
-
     return(rawdata)
   }
-
-
-## Test
-
-# targetfile <- "./rawdata/Diclofenac/targetsfile_diclofenac.csv"
-# datadir <- "./rawdata/Diclofenac/ArrayData/"
-# test1 <- importData(targetfile = targetfile, datadir = datadir)
-#
-# targetfile <- "./rawdata/Diuron/targetsfile_Diuron.csv"
-# datadir <- "./rawdata/Diuron/ArrayData/"
-# test2 <- importData(targetfile = targetfile, datadir = datadir)
-
-# targetfile <- "./rawdata/Mix13/targetsfile_mix13.csv"
-# datadir <- "./rawdata/Mix13/ArrayData/"
-# test3 <- importData(targetfile = targetfile, datadir = datadir)
