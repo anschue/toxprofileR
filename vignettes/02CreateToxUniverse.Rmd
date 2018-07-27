@@ -32,6 +32,8 @@ for(substance in c("diuron","diclofenac","naproxen")){
 
     assign(x = paste("data",substance,"logFC_smooth",sep = "_"),
            value = toxprofileR::spline_fit(get(paste("data",substance,"logFC",sep = "_"))))
+    
+    save(list=paste("data",substance,"logFC_smooth",sep = "_"), file = paste0("./data/",substance,"/data_logfc_smooth",substance,".Rd"))
 }
 ```
 
