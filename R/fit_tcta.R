@@ -52,8 +52,9 @@ cl<-snow::getMPIcluster()
 
 # if not available set up cluster ---------------------------------------------
 if(is.null(cl)){
-cl <- snow::makeMPIcluster(cln)
-}
+clustertype <- 1
+cl <- snow::makeMPIcluster(cln, type = "SOCK")
+} else{ clustertype <- 0}
 
 # load libraries on cluster ---------------------------------------------------
 snow::clusterEvalQ(cl = cl, expr = library("limma"))
@@ -68,8 +69,7 @@ snow::clusterExport(cl, c("nodelist_extrema", "param_bounds"))
 # apply modeling function -----------------------------------------------------
 
 tcta_paramlist_som <- snow::parLapply(cl = cl, x = nodelist_extrema, fun = toxprofileR::get_tcta_params, param_bounds = param_bounds)
-
-snow::stopCluster(cl)
+if(clustertype == 1){snow::stopCluster(cl)}
 } else {
 # apply modeling without paralellization
 pbapply::pblapply(X = nodelist_extrema,FUN = toxprofileR::get_tcta_params, param_bounds = param_bounds)
