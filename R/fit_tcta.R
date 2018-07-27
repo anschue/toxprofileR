@@ -22,8 +22,8 @@ nodelist_extrema <- lapply(seq(1,length(nodelist)), function(nodeID){
 })
 
 # set parameter boundaries ----------------------------------------------------
-conc_all<-elist$targets$concentration_umol_l[elist$targets$type!="recovery"]
-concentrations<-sort(unique(conc_all[conc_all!=0]), decreasing = T)
+concentration_umol_l<-elist$targets$concentration_umol_l[elist$targets$type!="recovery"]
+concentrations<-sort(unique(concentration_umol_l[concentration_umol_l!=0]), decreasing = T)
 dilution_factor<-concentrations[1]/concentrations[2]
 concrange<-max(concentrations)/min(concentrations)
 
@@ -33,13 +33,13 @@ param_bounds <- list(slope = c(min = -log((1/0.505)-1)/log(concrange^(0.5)),
                      sigma = c(min = log(1.5)/((-2*log(0.01))^0.5),
                                max = log(24)/((-2*log(0.99))^0.5)),
                      EC50 = c(min = min(concentrations)/concrange,
-                              max = max(conc_all)*concrange),
-                     mS50 = c(min = 1/(max(conc_all)*concrange),
+                              max = max(concentration_umol_l)*concrange),
+                     mS50 = c(min = 1/(max(concentration_umol_l)*concrange),
                               max = 1/(min(concentrations)/concrange)),
                      mu = c(min = 1.5,
                             max = 75),
                      mconc = c(min = min(concentrations)/concrange,
-                               max = max(conc_all)*concrange),
+                               max = max(concentration_umol_l)*concrange),
                      sconc = c(min = log(dilution_factor)/((-2*log(0.01))^0.5),
                                max = log(concrange)/((-2*log(0.99))^0.5)),
                      err = c(min = 0,

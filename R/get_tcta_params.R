@@ -30,33 +30,33 @@ get_tcta_params<-function(nodeframe, param_bounds){
 
         ### upregulation --------------
         Likelihood_theta_up<-function(theta){
-            sum(dnorm(x = nodeframe$logFC - abund.funct(dose = nodeframe$conc_all,time = nodeframe$timen_all, hillslope = theta[1],maxS50 = theta[2],mu = theta[3],sigma = theta[4],maxGene = nodeframe$max[1]),mean = 0,sd = theta[5],log = T))}
+            sum(dnorm(x = nodeframe$logFC - abund.funct(dose = nodeframe$concentration_umol_l,time = nodeframe$time_hpe, hillslope = theta[1],maxS50 = theta[2],mu = theta[3],sigma = theta[4],maxGene = nodeframe$max[1]),mean = 0,sd = theta[5],log = T))}
 
         ### downregulation ------------
         Likelihood_theta_down<-function(theta){
-            sum(dnorm(x = nodeframe$logFC - abund.funct(dose = nodeframe$conc_all, time = nodeframe$timen_all, hillslope = theta[1],maxS50 = theta[2],mu = theta[3],sigma = theta[4],maxGene = nodeframe$min[1]),mean = 0,sd = theta[5],log = T))}
+            sum(dnorm(x = nodeframe$logFC - abund.funct(dose = nodeframe$concentration_umol_l, time = nodeframe$time_hpe, hillslope = theta[1],maxS50 = theta[2],mu = theta[3],sigma = theta[4],maxGene = nodeframe$min[1]),mean = 0,sd = theta[5],log = T))}
 
         ## Gauss-Gauss --------------------------
 
         ### upregulation --------------
         Likelihood_theta_up_gau<-function(theta){
-            sum(dnorm(x = nodeframe$logFC - abund.funct_gaugau(dose = nodeframe$conc_all, time = nodeframe$timen_all, mconc = theta[1],sconc = theta[2],mu = theta[3],sigma = theta[4],maxGene = nodeframe$max[1]),mean = 0,sd = theta[5],log = T))}
+            sum(dnorm(x = nodeframe$logFC - abund.funct_gaugau(dose = nodeframe$concentration_umol_l, time = nodeframe$time_hpe, mconc = theta[1],sconc = theta[2],mu = theta[3],sigma = theta[4],maxGene = nodeframe$max[1]),mean = 0,sd = theta[5],log = T))}
 
         ### downregulation ------------
         Likelihood_theta_down_gau<-function(theta){
-            sum(dnorm(x = nodeframe$logFC - abund.funct_gaugau(dose = nodeframe$conc_all, time = nodeframe$timen_all, mconc = theta[1],sconc = theta[2],mu = theta[3],sigma = theta[4],maxGene = nodeframe$min[1]),mean = 0,sd = theta[5],log = T))}
+            sum(dnorm(x = nodeframe$logFC - abund.funct_gaugau(dose = nodeframe$concentration_umol_l, time = nodeframe$time_hpe, mconc = theta[1],sconc = theta[2],mu = theta[3],sigma = theta[4],maxGene = nodeframe$min[1]),mean = 0,sd = theta[5],log = T))}
 
 
         # define starting parameters ------------------------------------------
 
         starthillslope <- 1
-        startmaxS50 <- 1/median(unique(nodeframe$conc_all[nodeframe$conc_all!=0]))
-        startmu <- median(unique(nodeframe$timen_all))
+        startmaxS50 <- 1/median(unique(nodeframe$concentration_umol_l[nodeframe$concentration_umol_l!=0]))
+        startmu <- median(unique(nodeframe$time_hpe))
         startsigma <- 0.3
-        starterr <- sd(nodeframe$logFC[nodeframe$conc_all==min(nodeframe$conc_all)&nodeframe$time_all==3])
+        starterr <- sd(nodeframe$logFC[nodeframe$concentration_umol_l==min(nodeframe$concentration_umol_l)&nodeframe$time_hpe_factor==3])
 
-        startmconc<-nodeframe$conc_all[which.max(abs(nodeframe$logFC))]
-        startmu_gau<-nodeframe$timen_all[which.max(abs(nodeframe$logFC))]
+        startmconc<-nodeframe$concentration_umol_l[which.max(abs(nodeframe$logFC))]
+        startmu_gau<-nodeframe$time_hpe[which.max(abs(nodeframe$logFC))]
         startsconc<-0.3
 
         initialg<-as.numeric(c(hillslope=starthillslope,maxS50 = startmaxS50,mu = startmu,sigma = startsigma,err=starterr))
@@ -107,9 +107,9 @@ get_tcta_params<-function(nodeframe, param_bounds){
         # retrieve AICs for model ----------------------------------------------
 
         ## fit spline as "positive reference" ----------------------------------
-        nodeframe$ldose<-log(nodeframe$conc_all)
-        nodeframe$ltime<-log(nodeframe$timen_all)
-        what = mgcv::gam(formula = logFC~te(ldose,ltime,bs = "tp"),data=nodeframe[nodeframe$conc_all!=0,])
+        nodeframe$ldose<-log(nodeframe$concentration_umol_l)
+        nodeframe$ltime<-log(nodeframe$time_hpe)
+        what = mgcv::gam(formula = logFC~te(ldose,ltime,bs = "tp"),data=nodeframe[nodeframe$concentration_umol_l!=0,])
 
         ## retrieve AICcs for Spline/Nullmodel as reference -------------------
         n= nrow(nodeframe)
@@ -199,8 +199,8 @@ get_tcta_params<-function(nodeframe, param_bounds){
                            Convergence_down_gauss=fit_down_gauss$convergence,
                            maxGene_up=nodeframe$max[1],
                            maxGene_down=nodeframe$min[1],
-                           maxGene_up_sub=max(aggregate(nodeframe$logFC,by=list(nodeframe$conc_all,nodeframe$time_all),median)[,"x"],na.rm = T),
-                           maxGene_down_sub=min(aggregate(nodeframe$logFC,by=list(nodeframe$conc_all,nodeframe$time_all),median)[,"x"],na.rm = T),
+                           maxGene_up_sub=max(aggregate(nodeframe$logFC,by=list(nodeframe$concentration_umol_l,nodeframe$time_hpe_factor),median)[,"x"],na.rm = T),
+                           maxGene_down_sub=min(aggregate(nodeframe$logFC,by=list(nodeframe$concentration_umol_l,nodeframe$time_hpe_factor),median)[,"x"],na.rm = T),
                            direction_hill = c(1,-1)[which.max(c(AICw_up_hill, AICw_down_hill))],
                            direction_gauss =  c(1,-1)[which.max(c(AICw_up_gauss, AICw_down_gauss))],
                            best_model = c(1,1,2,2)[which.max(c(AICw_up_hill, AICw_down_hill,AICw_up_gauss, AICw_down_gauss))],

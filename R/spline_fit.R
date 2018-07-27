@@ -15,19 +15,19 @@ spline_fit <- function(elist) {
   probes <-
     as.data.frame(elist$E[, elist$targets$type !=
       "recovery"])
-  conc_all <-
+  concentration_umol_l <-
     elist$targets$concentration_umol_l[elist$targets$type !=
       "recovery"]
-  time_all <-
+  time_hpe_factor <-
     ordered(elist$targets$time_hpe[elist$targets$type != "recovery"])
 
-  timen_all <-
+  time_hpe <-
     elist$targets$time_hpe[elist$targets$type !=
       "recovery"]
 
   substance <- elist$targets$substance[1]
 
-  concentrations <- sort(unique(conc_all[conc_all != 0]), decreasing = T)
+  concentrations <- sort(unique(concentration_umol_l[concentration_umol_l != 0]), decreasing = T)
   annotation <- elist$genes
   probes$ProbeID <- rownames(probes)
 
@@ -35,9 +35,9 @@ spline_fit <- function(elist) {
   splineprobes <- pbapply::pbapply(probes, 1, function(gene) {
     ProbeID <- gene["ProbeID"]
     # get concentration vector--------------------------------------------------
-    conc <- conc_all
-    time <- time_all
-    timen <- timen_all
+    conc <- concentration_umol_l
+    time <- time_hpe_factor
+    timen <- time_hpe
 
     # remove all meta-data from gene vector-------------------------------------
     gene <-
@@ -79,7 +79,7 @@ spline_fit <- function(elist) {
     })
 
     splinedata <-
-      expand.grid(ldose = unique(log(conc_all[conc_all != 0])), ltime = unique(log(timen_all[conc_all !=
+      expand.grid(ldose = unique(log(concentration_umol_l[concentration_umol_l != 0])), ltime = unique(log(time_hpe[concentration_umol_l !=
         0]))) ## do not consider replication because this already influences the spline fit
     splinedata$logFC <- predict(what, newdata = splinedata)
     return(splinedata$logFC)
@@ -91,8 +91,8 @@ spline_fit <- function(elist) {
     list(
       E = t(splineprobes),
       targets = expand.grid(
-        concentration_umol_l = unique(conc_all[conc_all != 0]),
-        time_hpe = unique(timen_all[conc_all != 0])
+        concentration_umol_l = unique(concentration_umol_l[concentration_umol_l != 0]),
+        time_hpe = unique(time_hpe[concentration_umol_l != 0])
       ),
       genes = elist$genes
     )

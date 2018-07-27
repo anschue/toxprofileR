@@ -20,9 +20,9 @@ get_extrema_nodes <- function(dslist){
         if(is.data.frame(node)){
 
             # remove outliers -------------------------------------------------
-            conc<-node$conc_all
-            time<-node$time_all
-            timen<-node$timen_all
+            conc<-node$concentration_umol_l
+            time<-node$time_hpe_factor
+            timen<-node$time_hpe
             logFC<-node$logFC
 
             outliernew<-as.numeric(outliers::grubbs.test(x = as.numeric(logFC))["p.value"])
