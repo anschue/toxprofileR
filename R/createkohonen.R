@@ -58,6 +58,8 @@ create_tox_universe <-
         }))
       )
 
+    metadata$names <- make.names(paste(metadata$substance,metadata$concentration_level, metadata$time_hpe, sep = "_"))
+
     # take probes with highest IQR for duplicate probe --------------------
     IQRs <- apply(E_all, 1, IQR, na.rm = T)
     data <- E_all[order(IQRs, decreasing = T), ]
