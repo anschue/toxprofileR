@@ -131,7 +131,7 @@ get_tcta_params<-function(nodeframe, param_bounds){
         AICw_up_hill<-(exp(-delta/2)/sum(exp(-delta/2),na.rm = T))[1]
         rm(list=c("sortframe","delta"))
 
-        sortframe<-data.frame(models=c(AICup_gauss,AIC_null),index=c(1:2))
+        sortframe<-data.frame(models=c(AIC_up_gauss,AIC_null),index=c(1:2))
         delta<-c(sortframe$models-min(sortframe$models,na.rm = T))
         AICw_up_gauss<-(exp(-delta/2)/sum(exp(-delta/2),na.rm = T))[1]
         rm(list=c("sortframe","delta"))
