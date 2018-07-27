@@ -90,7 +90,7 @@ get_tcta_params<-function(nodeframe, param_bounds){
         ### up --------------
         results_up_gauss <- lapply(seq(1,length(seeds)), function(seedID){
             set.seed(seeds[seedID])
-            hydromad::SCEoptim(FUN = Likelihood_theta_up_gau,par = initialg_gau,control=list(fnscale=-1,returnpop=F),lower=as.numeric(c(mconc=minmconc,sconc=minsconc,mu=param_bounds$mu["min"],sigma=param_bounds$sigma["min"],err=param_bounds$err["min"])),upper=as.numeric(c(mconc=maxmconc,sconc=maxsconc,mu=param_bounds$mu["max"],sigma=param_bounds$sigma["max"],err=param_bounds$err["max"])))
+            hydromad::SCEoptim(FUN = Likelihood_theta_up_gau,par = initialg_gau,control=list(fnscale=-1,returnpop=F),lower=as.numeric(c(mconc=param_bounds$mconc["min"],sconc=param_bounds$sconc["min"],mu=param_bounds$mu["min"],sigma=param_bounds$sigma["min"],err=param_bounds$err["min"])),upper=as.numeric(c(mconc=param_bounds$mconc["max"],sconc=param_bounds$sconc["max"],mu=param_bounds$mu["max"],sigma=param_bounds$sigma["max"],err=param_bounds$err["max"])))
         })
 
         fit_up_gauss <- results_up_gauss[[which.min(unlist(lapply(results_up_gauss, function(results){results$value})))]]
@@ -98,7 +98,7 @@ get_tcta_params<-function(nodeframe, param_bounds){
         ### down ------------
         results_down_gauss <- lapply(seq(1,length(seeds)), function(seedID){
             set.seed(seeds[seedID])
-            hydromad::SCEoptim(FUN = Likelihood_theta_down_gau,par = initialg_gau,control=list(fnscale=-1,returnpop=F),lower=as.numeric(c(mconc=minmconc,sconc=minsconc,mu=param_bounds$mu["min"],sigma=param_bounds$sigma["min"],err=param_bounds$err["min"])),upper=as.numeric(c(mconc=maxmconc,sconc=maxsconc,mu=param_bounds$mu["max"],sigma=param_bounds$sigma["max"],err=param_bounds$err["max"])))
+            hydromad::SCEoptim(FUN = Likelihood_theta_down_gau,par = initialg_gau,control=list(fnscale=-1,returnpop=F),lower=as.numeric(c(mconc=param_bounds$mconc["min"],sconc=param_bounds$sconc["min"],mu=param_bounds$mu["min"],sigma=param_bounds$sigma["min"],err=param_bounds$err["min"])),upper=as.numeric(c(mconc=param_bounds$mconc["max"],sconc=param_bounds$sconc["max"],mu=param_bounds$mu["max"],sigma=param_bounds$sigma["max"],err=param_bounds$err["max"])))
         })
 
         fit_down_gauss <- results_down_gauss[[which.min(unlist(lapply(results_down_gauss, function(results){results$value})))]]
