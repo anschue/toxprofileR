@@ -52,7 +52,7 @@ assign(x = paste0("tcta_paramframe_som_",substance),
        value = toxprofileR::fit_tcta(elist = get(paste("data",substance,"logFC",sep="_")),
                                      extrema = extrema,
                                      cluster = TRUE,
-                                     cln = 3))
+                                     cln = 8))
 
 save(list = paste0("tcta_paramframe_som_",substance), file = paste("./data/",substance,"/tcta_",substance,".Rd",sep=""))
 }
