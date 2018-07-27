@@ -67,12 +67,15 @@ snow::clusterEvalQ(cl, expr = library("toxprofileR"))
 snow::clusterExport(cl, c("nodelist_extrema", "param_bounds"))
 
 # apply modeling function -----------------------------------------------------
-
+tictoc::tic()
 tcta_paramlist_som <- snow::parLapply(cl = cl, x = nodelist_extrema, fun = toxprofileR::get_tcta_params, param_bounds = param_bounds)
+tictoc::toc()
 if(clustertype == 1){snow::stopCluster(cl)}
 } else {
 # apply modeling without paralellization
+tictoc::tic()
 pbapply::pblapply(X = nodelist_extrema,FUN = toxprofileR::get_tcta_params, param_bounds = param_bounds)
+tictoc::toc()
 }
 
 tcta_paramframe_som <- as.data.frame(do.call("rbind",tcta_paramlist_som))
