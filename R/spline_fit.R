@@ -25,7 +25,7 @@ spline_fit <- function(elist) {
     elist$targets$time_hpe[elist$targets$type !=
       "recovery"]
 
-  substance <- elist$targets$substance
+  substance <- elist$targets$substance[1]
 
   concentrations <- sort(unique(conc_all[conc_all != 0]), decreasing = T)
   annotation <- elist$genes
