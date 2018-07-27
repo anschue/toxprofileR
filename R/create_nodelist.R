@@ -6,8 +6,13 @@
 #' @export
 create_nodelist <- function(elist){
 
+nodeframe$ensembl <- as.character(nodeframe$ensembl)
+nodeframe$ProbeID <- as.character(nodeframe$ProbeID)
+elist$genes$ProbeName <- as.character(elist$genes$ProbeName)
+
 nodeframe_elist <- nodeframe[!is.na(nodeframe$ProbeID),]
 
+if(is.null(elist$targets$type)){elist$targets$type <- "treatment"} # for smoothed datasets
 
     # create list with logFC and metadata for each node -----------------------
     nodelist <- lapply(X = seq(1,max(nodeframe_elist$toxnode)),FUN = function(nodeID){
