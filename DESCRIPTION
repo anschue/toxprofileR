@@ -20,7 +20,7 @@ Imports:
     tictoc (>= 1.0),
     kohonen (>= 3.0.5),
     hydromad
-Remotes: git::https://github.com/floybix/hydromad.git
+Remotes: floybix/hydromad
 RoxygenNote: 6.0.1
 Suggests: 
     knitr (>= 1.20),
