@@ -62,6 +62,15 @@ nodeframe <- tox_universe$nodeframe
 save(nodeframe, file="./data/all/universe_nodeframe.Rd")
 ```
 
+### Retrieve grid
+
+Also often used will be the `grid`. We retrieve and save this as an extra file.
+
+```{r nodeframe}
+grid <- tox_universe$som_model$grid
+save(grid, file="./data/all/universe_grid.Rd")
+```
+
 ##Session Info
 ```{r session info, echo=FALSE}
 devtools::session_info()

@@ -72,8 +72,8 @@ plot_portrait <- function(nodelist, tox_universe, tcta_paramframe = NULL, substa
     if(type=="code"){
         if(paste(substance, concentration_level, time_hpe ,sep="_")%in%colnames(tox_universe$som_model$codes[[1]])){
         plotdata <- data.frame(logFC = as.numeric(tox_universe$som_model$codes[[1]][,match(paste(substance, concentration_level, time_hpe ,sep="_"),colnames(tox_universe$som_model$codes[[1]]))]),
-                               x=tox_universe$som_model$grid$pts[,1],
-                               y=tox_universe$som_model$grid$pts[,2])
+                               x=grid$pts[,1],
+                               y=grid$pts[,2])
         } else {
             message("Given conditions not available in toxicogenomic universe, please choose other conditions or other plot type")
         }
@@ -92,8 +92,8 @@ plot_portrait <- function(nodelist, tox_universe, tcta_paramframe = NULL, substa
             nodedf.agg$x[nodedf.agg$concentration_level == concentration_level&nodedf.agg$time_hpe == time_hpe]
             } else {NA}
             })),
-            x = tox_universe$som_model$grid$pts[,1],
-            y = tox_universe$som_model$grid$pts[,2])
+            x = grid$pts[,1],
+            y = grid$pts[,2])
     }
 
     p1 <- ggplot(plotdata, aes(x,y)) +
