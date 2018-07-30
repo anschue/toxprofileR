@@ -51,7 +51,7 @@ for(substance in c("diuron","diclofenac","naproxen")){
 assign(x = paste0("tcta_paramframe_som_",substance), 
        value = toxprofileR::fit_tcta(elist = get(paste("data",substance,"logFC",sep="_")),
                                      extrema = extrema,
-                                     cluster = FALSE))
+                                     cluster = TRUE))
 
 save(list = paste0("tcta_paramframe_som_",substance), file = paste("./data/",substance,"/tcta_",substance,".Rd",sep=""))
 }
