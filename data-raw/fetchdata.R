@@ -1,4 +1,4 @@
-rm(list=ls())
+rm(list = ls())
 # new array annotation --------------------------------------------------------
 load("./data-raw/Annotation/mapComplete.Rd")
 new_annotation <- map

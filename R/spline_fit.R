@@ -100,7 +100,7 @@ spline_fit <- function(elist) {
 
   splineprobes_list$targets$substance <- substance
   splineprobes_list$targets$concentration_level <- as.factor(paste0("C", as.numeric(ordered(splineprobes_list$targets$concentration_umol_l))))
-  splineprobes_list$targets$names <- make.names(paste(splineprobes_list$targets$substance,splineprobes_list$targets$concentration_level, splineprobes_list$targets$time_hpe, sep = "_"))
+  splineprobes_list$targets$names <- make.names(paste(splineprobes_list$targets$substance, splineprobes_list$targets$concentration_level, splineprobes_list$targets$time_hpe, sep = "_"))
 
   colnames(splineprobes_list$E) <- splineprobes_list$targets$names
 

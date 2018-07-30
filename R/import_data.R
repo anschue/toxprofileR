@@ -91,12 +91,13 @@ importData <-
     group <- rep("include", length(iqrs))
     group[exclude] <- "exclude"
 
-    if(output){
-    limma::plotDensities((log2(raw$E)),
-      legend = T,
-      group = group,
-      col = c(2, "grey")
-    )}
+    if (output) {
+      limma::plotDensities((log2(raw$E)),
+        legend = T,
+        group = group,
+        col = c(2, "grey")
+      )
+    }
 
     rawdata <-
       limma::subsetListOfArrays(

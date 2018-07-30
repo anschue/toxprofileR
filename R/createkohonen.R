@@ -58,7 +58,7 @@ create_tox_universe <-
         }))
       )
 
-    metadata$names <- make.names(paste(metadata$substance,metadata$concentration_level, metadata$time_hpe, sep = "_"))
+    metadata$names <- make.names(paste(metadata$substance, metadata$concentration_level, metadata$time_hpe, sep = "_"))
 
     # take probes with highest IQR for duplicate probe --------------------
     IQRs <- apply(E_all, 1, IQR, na.rm = T)
@@ -124,7 +124,7 @@ create_tox_universe <-
     tictoc::toc()
 
     nodeframe <- data.frame(ensembl = rownames(som_model$data[[1]]), toxnode = som_model$unit.classif)
-    nodeframe <-  merge.data.frame(nodeframe, ProbeIDs_metalogFC, by="ensembl", all.x = T, all.y = F, sort = T)
+    nodeframe <- merge.data.frame(nodeframe, ProbeIDs_metalogFC, by = "ensembl", all.x = T, all.y = F, sort = T)
 
 
     resultlist <- list(
@@ -139,7 +139,7 @@ create_tox_universe <-
       plot(som_model, type = "count")
       plot(som_model, type = "dist.neighbours")
       plot(som_model, type = "codes")
-      hist(table(nodeframe$toxnode),main = "Number of genes per toxnode",xlab = "Gene count")
+      hist(table(nodeframe$toxnode), main = "Number of genes per toxnode", xlab = "Gene count")
     }
 
     return(resultlist)

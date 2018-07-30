@@ -5,13 +5,12 @@
 #' @return Different QC Plots
 #' @export
 qc_plots <- function(elist) {
-
   library("limma")
 
   # boxplot----------------------------------------------------------------------
   boxplot(elist$E, ylim = c(0, 20), ylab = "Data distribution\n with dark and bright corners (red)")
-  points(elist$E[elist$genes$ProbeName == "GE_BrightCorner", ], ylim = c(0, 20), pch=24,bg="red")
-  points(elist$E[elist$genes$ProbeName == "DarkCorner", ], ylim = c(0, 20), pch = 25, bg= "red")
+  points(elist$E[elist$genes$ProbeName == "GE_BrightCorner", ], ylim = c(0, 20), pch = 24, bg = "red")
+  points(elist$E[elist$genes$ProbeName == "DarkCorner", ], ylim = c(0, 20), pch = 25, bg = "red")
 
 
   # density plot-----------------------------------------------------------------
