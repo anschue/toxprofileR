@@ -26,6 +26,7 @@ When using machine learning algorithms like the self-organizing map, there is no
 Therefore we first load the logFC data (see `Part 1- Loading and preprocessing microarray data` on how to retrieve logFC data from raw microarray data). For each gene and substance, outlier measurements are removed and afterwards a 3D-spline is fit.
 
 ```{r smooth data}
+library("toxprofileR")
 for(substance in c("diuron","diclofenac","naproxen")){
     
     load(file = paste0("./data/",substance,"/data_logfc_",substance,".Rd"))
@@ -43,7 +44,7 @@ The logFC values which are spine-smoothed now (and do not contain any replicates
 
 ```{r som}
 
-tox_universe <- create_tox_universe(dslist = list(data_diuron_logFC_smooth,
+tox_universe <- toxprofileR::create_tox_universe(dslist = list(data_diuron_logFC_smooth,
                                                   data_diclofenac_logFC_smooth,
                                                   data_naproxen_logFC_smooth),
                                     output = T,

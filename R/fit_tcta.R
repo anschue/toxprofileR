@@ -74,7 +74,7 @@ if(clustertype == 1){snow::stopCluster(cl)}
 } else {
 # apply modeling without paralellization
 tictoc::tic()
-pbapply::pblapply(X = nodelist_extrema,FUN = toxprofileR::get_tcta_params, param_bounds = param_bounds)
+tcta_paramlist_som <- pbapply::pblapply(X = nodelist_extrema,FUN = toxprofileR::get_tcta_params, param_bounds = param_bounds)
 tictoc::toc()
 }
 
