@@ -4,7 +4,8 @@
 \alias{get_sig_level}
 \title{Get significance level}
 \usage{
-get_sig_level(CIdiffs, model = c("hill-gauss", "gauss-gauss"), siglevel = 0)
+get_sig_level(CIdiffs, model = c("hill-gauss", "gauss-gauss"),
+  siglevel = 0)
 }
 \arguments{
 \item{CIdiffs}{List of CIdiffs}

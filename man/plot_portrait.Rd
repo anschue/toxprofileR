@@ -6,8 +6,9 @@
 \usage{
 plot_portrait(nodelist, tox_universe, tcta_paramframe = NULL,
   substance = NULL, time_hpe, concentration_level, type = c("code",
-  "median", "modeled", "parameter"), parameter = NULL, onlysig = c(TRUE,
-  FALSE), output = c("plot", "data"), legend = FALSE)
+  "median", "modeled", "parameter"), parameter = NULL,
+  onlysig = c(TRUE, FALSE), output = c("plot", "data"),
+  legend = FALSE)
 }
 \arguments{
 \item{nodelist}{A nodelist created with toxprofileR::create_nodelist()}

@@ -6,7 +6,8 @@
 \usage{
 plot_portrait_grid(nodelist, tox_universe, tcta_paramframe = NULL,
   substance = NULL, type = c("code", "median", "modeled", "parameter"),
-  parameter = NULL, onlysig = c(TRUE, FALSE), output = c("plot", "data"))
+  parameter = NULL, onlysig = c(TRUE, FALSE), output = c("plot",
+  "data"))
 }
 \arguments{
 \item{nodelist}{A nodelist created with toxprofileR::create_nodelist()}
