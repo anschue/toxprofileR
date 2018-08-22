@@ -5,6 +5,8 @@ Version: 0.1.0
 date: 2018-07-23
 Author: person("Andreas", "Schuettler", email = "andreas.schuettler@ufz.de", role = c("aut", "cre"), 
     comment = c(ORCID = "0000-0003-3823-1667"))
+Maintainer: person("Andreas", "Schuettler", email = "andreas.schuettler@ufz.de", role = c("aut", "cre"), 
+    comment = c(ORCID = "0000-0003-3823-1667"))
 Description: This package supplies functions to import, process and analyze time and concentration resolved Oaklabs Zebrafish microarray data retrieved after exposure to chemicals.
 License: GPL-3
 Encoding: UTF-8
@@ -19,11 +21,11 @@ Imports:
     kohonen (>= 3.0.5),
     hydromad (>= 0.9.15),
     nnet (>= 7.3.12),
-    data.table (>= 1.11.4),
-    biomaRt (>= 2.34.2),
-    GenomicRanges (>= 1.30.3)
+    data.table (>= 1.11.4)
 Remotes: floybix/hydromad
 RoxygenNote: 6.1.0
 biocViews:
     limma (>= 3.34.9),
     sva (>= 3.26.0)
+    biomaRt (>= 2.34.2),
+    GenomicRanges (>= 1.30.3)
