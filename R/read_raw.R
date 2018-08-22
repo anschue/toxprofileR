@@ -14,7 +14,7 @@ read_raw_public <- function(datadir,
                             metadata) {
 
     # Agilent ---------------------------------------------------------------------------
-    if (rawData == "Agilent") {
+    if (rawformat == "Agilent") {
 
         # loading raw data --------------------------------------------------------------
         metadata$FileName <- metadata$Array.Data.File
