@@ -18,7 +18,10 @@ Imports:
     tictoc (>= 1.0),
     kohonen (>= 3.0.5),
     hydromad (>= 0.9.15),
-    nnet (>= 7.3.12)
+    nnet (>= 7.3.12),
+    data.table (>= 1.11.4),
+    biomaRt (>= 2.34.2),
+    GenomicRanges (>= 1.30.3)
 Remotes: floybix/hydromad
 RoxygenNote: 6.1.0
 biocViews:
