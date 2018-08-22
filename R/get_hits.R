@@ -18,8 +18,6 @@ get_hits_exons <-
              probelengths,
              name = "exon") {
 
-        library("biomaRt")
-
         # read bed --------------------------------------------------------------------
         message("read bed")
         drexon <- read.table(exon_bed, header = F)
