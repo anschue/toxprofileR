@@ -10,6 +10,8 @@
 #' @param data an EList
 #'
 #' @return an Elist
+#'
+#' @import limma
 #' @export
 #'
 #' @examples No example yet
