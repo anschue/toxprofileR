@@ -26,4 +26,5 @@ biocViews:
     limma (>= 3.34.9),
     sva (>= 3.26.0)
     biomaRt (>= 2.34.2),
-    GenomicRanges (>= 1.30.3)
+    GenomicRanges (>= 1.30.3),
+    oligo (>= 1.42.0)
