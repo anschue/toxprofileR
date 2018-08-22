@@ -149,11 +149,6 @@ get_hits_genome <-
              maxmismatch,
              probelengths) {
 
-        library("data.table")
-        library("biomaRt")
-        library("GenomicRanges")
-
-
         # read bed ----------------------------------------------------------------
         message("read .bed file")
         drGenome <-
