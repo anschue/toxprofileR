@@ -141,6 +141,7 @@ get_hits_exons <-
 #' @return a data.frame containing probe-genome associations
 #'
 #' @import data.table
+#' @import GenomicRanges
 #' @export
 #'
 get_hits_genome <-
