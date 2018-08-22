@@ -47,14 +47,21 @@ read_raw_public <- function(datadir,
         )
 
         # remove outlier array(s) -------------------------------------------------
-        iqrs <- apply(log2(raw$E), MARGIN = 2, IQR)
-        int <-
-            findInterval(iqrs, vec = c(mean(iqrs) - (3 * sd(iqrs)), mean(iqrs) +
-                                           (3 * sd(iqrs))))
+        include <- c(1:nrow(metadata))
 
-        exclude <- c(which(int != 1))
-        include <- c(1:length(iqrs))
+        outliermetrics1 <- arrayQualityMetrics::outliers(log2(raw$E), method = "KS")
+        outliermetrics2 <- arrayQualityMetrics::outliers(log2(raw$E), method = "sum")
+        outliermetrics3 <- arrayQualityMetrics::outliers(log2(raw$E), method = "upperquartile")
+
+        exclude <- table(c(as.numeric(outliermetrics1@which),
+                           as.numeric(outliermetrics2@which),
+                           as.numeric(outliermetrics3@which)))
+
+        exclude <- as.numeric(names(exclude)[exclude>=2])
+
         include <- include[!include %in% exclude]
+
+        message(paste("detected", metadata$gsm.gsm[exclude], "as outlier\n"))
 
         group <- rep("include", length(iqrs))
         group[exclude] <- "exclude"
@@ -149,15 +156,25 @@ read_raw_public <- function(datadir,
 
         pData(data.raw) <- metadata
 
-        # rough QC --------------------------------------------------------
-        message("remove outlier arrays based on IQRS")
-        iqrs <- apply(log2(exprs(data.raw)), MARGIN = 2, IQR)
-        int <-
-            findInterval(iqrs, vec = c(median(iqrs) - (3 * sd(iqrs)), median(iqrs) +
-                                           (3 * sd(iqrs))))
+        # remove outlier array(s) -------------------------------------------------
+        include <- c(1:nrow(metadata))
 
-        data.raw1 <- data.raw[, int == 1]
-        metadata <- metadata[int == 1, ]
+        outliermetrics1 <- arrayQualityMetrics::outliers(log2(raw$E), method = "KS")
+        outliermetrics2 <- arrayQualityMetrics::outliers(log2(raw$E), method = "sum")
+        outliermetrics3 <- arrayQualityMetrics::outliers(log2(raw$E), method = "upperquartile")
+
+        exclude <- table(c(as.numeric(outliermetrics1@which),
+                           as.numeric(outliermetrics2@which),
+                           as.numeric(outliermetrics3@which)))
+
+        exclude <- as.numeric(names(exclude)[exclude>=2])
+
+        include <- include[!include %in% exclude]
+
+        message(paste("detected", metadata$gsm.gsm[exclude], "as outlier\n"))
+
+        data.raw1 <- data.raw[, include]
+        metadata <- metadata[include, ]
 
         # normalization ---------------------------------------------------
         message("normalization (rma)")

@@ -29,6 +29,7 @@ importData <-
              scanID = 1,
              output = T,
              removeOutliers = T) {
+
     # read target file --------------------------------------------------------
     targets <- limma::readTargets(file = targetfile, sep = "\t")
     targets <- targets[targets$scan_ID == scanID, ]
@@ -47,7 +48,7 @@ importData <-
       )
 
     # read rawdata ------------------------------------------------------------
-    rawdata <- limma::read.maimages(
+    raw <- limma::read.maimages(
       files = targets,
       source = "agilent",
       path = datadir,
@@ -71,22 +72,35 @@ importData <-
     )
     ## not covered: SpotExtentX  gBGMeanSignal
 
-    raw <- rawdata
 
     # output target table -----------------------------------------------------
     if (output) {
       knitr::kable(targets)
     }
 
-    # remove outlier array(s) -------------------------------------------------
-    iqrs <- apply(log2(raw$E), MARGIN = 2, IQR)
-    int <-
-      findInterval(iqrs, vec = c(mean(iqrs) - (2 * sd(iqrs)), mean(iqrs) +
-        (2 * sd(iqrs))))
+    # outlier detection --------------------------------------------------------
+    include <- c(1:nrow(targets))
 
-    exclude <- c(which(int != 1))
-    include <- c(1:length(iqrs))
+    outliermetrics1 <- arrayQualityMetrics::outliers(log2(raw$E), method = "KS")
+    outliermetrics2 <- arrayQualityMetrics::outliers(log2(raw$E), method = "sum")
+    outliermetrics3 <- arrayQualityMetrics::outliers(log2(raw$E), method = "upperquartile")
+
+    exclude <- table(c(as.numeric(outliermetrics1@which),
+                 as.numeric(outliermetrics2@which),
+                 as.numeric(outliermetrics3@which)))
+
+    exclude <- as.numeric(names(exclude)[exclude>=2])
+
+    # remove outlier array(s) -------------------------------------------------
+    # iqrs <- apply(log2(raw$E), MARGIN = 2, IQR)
+    # int <-
+    #   findInterval(iqrs, vec = c(mean(iqrs) - (2 * sd(iqrs)), mean(iqrs) +
+    #     (2 * sd(iqrs))))
+    # exclude <- c(which(int != 1))
+
     include <- include[!include %in% exclude]
+
+    message(paste("detected", targets$names[exclude], "as outlier\n"))
 
     group <- rep("include", length(iqrs))
     group[exclude] <- "exclude"
@@ -97,9 +111,14 @@ importData <-
         group = group,
         col = c(2, "grey")
       )
+
+    boxplot((log2(raw$E)),col = (as.numeric(as.factor(group))+2))
+
+
     }
 
-    rawdata <-
+    if(removeOutliers){
+    raw <-
       limma::subsetListOfArrays(
         raw,
         i = c(1:dim(raw)[1]),
@@ -122,7 +141,8 @@ importData <-
         JX = "targets",
         I = NULL
       )
-    targets <- targets[include, ]
+    }
 
-    return(rawdata)
+
+    return(raw)
   }
