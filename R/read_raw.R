@@ -6,6 +6,8 @@
 #' @param metadata metadataframe
 #'
 #' @return returns a normalized Elist
+#'
+#' @import limma
 #' @export
 #'
 read_raw_public <- function(datadir,
@@ -165,10 +167,9 @@ read_raw_public <- function(datadir,
         data.norm.E <-
             new("EList", list(
                 E = exprs(data.norm),
-                targets = pData(data.norm)
+                targets = pData(data.norm),
+                genes = data.frame(ProbeID = rownames(exprs(data.norm)))
             ))
-        data.norm.E$genes <-
-            data.frame(ProbeID = rownames(data.norm.E$E))
 
 
         ####update Annotation
