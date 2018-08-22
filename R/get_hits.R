@@ -1,5 +1,6 @@
 #' Get Exon Hits
 #'
+#'
 #' @param exon_bed path to .bed file
 #' @param mart biomart object
 #' @param maxmismatch maximum number of mismatches
@@ -7,6 +8,7 @@
 #' @param name database name
 #'
 #' @return a data.frame containing probe-exon associations
+#'
 #' @export
 #'
 get_hits_exons <-
@@ -137,6 +139,8 @@ get_hits_exons <-
 #' @param probelengths length of probes
 #'
 #' @return a data.frame containing probe-genome associations
+#'
+#' @import data.table
 #' @export
 #'
 get_hits_genome <-
