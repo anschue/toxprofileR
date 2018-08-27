@@ -4,7 +4,8 @@
 \alias{get_hits_exons}
 \title{Get Exon Hits}
 \usage{
-get_hits_exons(exon_bed, mart, maxmismatch, probelengths, name = "exon")
+get_hits_exons(exon_bed, mart, maxmismatch, probelengths, name = "exon",
+  arraytype = c("regular", "Affy_ST"))
 }
 \arguments{
 \item{exon_bed}{path to .bed file}
@@ -16,6 +17,8 @@ get_hits_exons(exon_bed, mart, maxmismatch, probelengths, name = "exon")
 \item{probelengths}{length of probes}
 
 \item{name}{database name}
+
+\item{arraytype}{"regular" or "Affy_ST"}
 }
 \value{
 a data.frame containing probe-exon associations

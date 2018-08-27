@@ -6,6 +6,7 @@
 #' @param maxmismatch maximum number of mismatches
 #' @param probelengths length of probes
 #' @param name database name
+#' @param arraytype "regular" or "Affy_ST"
 #'
 #' @return a data.frame containing probe-exon associations
 #'
@@ -143,6 +144,7 @@ get_hits_exons <-
 #' @param mart mart object
 #' @param maxmismatch maximum number of mismatches
 #' @param probelengths length of probes
+#' @param arraytype "regular" or "Affy_ST"
 #'
 #' @return a data.frame containing probe-genome associations
 #'

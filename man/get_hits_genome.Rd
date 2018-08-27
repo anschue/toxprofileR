@@ -4,7 +4,8 @@
 \alias{get_hits_genome}
 \title{Get Genome hits}
 \usage{
-get_hits_genome(genome_bed, mart, maxmismatch, probelengths)
+get_hits_genome(genome_bed, mart, maxmismatch, probelengths,
+  arraytype = c("regular", "Affy_ST"))
 }
 \arguments{
 \item{genome_bed}{path to .bed file}
@@ -14,6 +15,8 @@ get_hits_genome(genome_bed, mart, maxmismatch, probelengths)
 \item{maxmismatch}{maximum number of mismatches}
 
 \item{probelengths}{length of probes}
+
+\item{arraytype}{"regular" or "Affy_ST"}
 }
 \value{
 a data.frame containing probe-genome associations
