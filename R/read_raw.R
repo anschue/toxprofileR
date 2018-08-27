@@ -157,11 +157,12 @@ read_raw_public <- function(datadir,
         pData(data.raw) <- metadata
 
         # remove outlier array(s) -------------------------------------------------
+        message("outlier detection")
         include <- c(1:nrow(metadata))
 
-        outliermetrics1 <- arrayQualityMetrics::outliers(log2(raw$E), method = "KS")
-        outliermetrics2 <- arrayQualityMetrics::outliers(log2(raw$E), method = "sum")
-        outliermetrics3 <- arrayQualityMetrics::outliers(log2(raw$E), method = "upperquartile")
+        outliermetrics1 <- arrayQualityMetrics::outliers(log2(exprs(data.raw)), method = "KS")
+        outliermetrics2 <- arrayQualityMetrics::outliers(log2(exprs(data.raw)), method = "sum")
+        outliermetrics3 <- arrayQualityMetrics::outliers(log2(exprs(data.raw)), method = "upperquartile")
 
         exclude <- table(c(as.numeric(outliermetrics1@which),
                            as.numeric(outliermetrics2@which),
@@ -200,7 +201,8 @@ read_raw_public <- function(datadir,
                 )
             )
 
-
+        data.norm.E$genes$ProbeID <- make.names(data.norm.E$genes$ProbeID)
+        annotation_new$ProbeID <- make.names(annotation_new$ProbeID)
 
         data.norm.E$genes <-
             merge(
@@ -213,9 +215,8 @@ read_raw_public <- function(datadir,
 
         rownames(data.norm.E$E) <-
             make.names(rownames(data.norm.E$E))
-        data.norm.E$genes$ProbeID <-
-            make.names(data.norm.E$genes$ProbeID)
-        data.norm.E$genes <-
+
+         data.norm.E$genes <-
             data.norm.E$genes[match(rownames(data.norm.E$E), data.norm.E$genes$ProbeID), ]
 
         colnames(data.norm.E$genes)[colnames(data.norm.E$genes) == "ProbeID"] <-
