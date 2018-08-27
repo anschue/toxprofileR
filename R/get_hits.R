@@ -16,7 +16,8 @@ get_hits_exons <-
              mart,
              maxmismatch,
              probelengths,
-             name = "exon") {
+             name = "exon",
+             arraytype = c("regular","Affy_ST")) {
 
         # read bed --------------------------------------------------------------------
         message("read bed")
@@ -65,7 +66,14 @@ get_hits_exons <-
         #
 
         # take only hits on "forward" strand (since there is no reverse strand for transcripts) --------
-        drexon <- drexon[drexon$strand == "+",]
+        if(arraytype!="Affy_ST"){
+            drexon <- drexon[drexon$strand == "+",]
+        }
+
+        # for Affy-ST take hits from "reverse" strand###
+        if(arraytype=="Affy_ST"){
+            drexon <- drexon[drexon$strand == "-",]
+        }
 
         # get GeneIDs for exon alignments -----------------------------------------
         message("retreive Ensembl GeneIDs for exon alignments")
@@ -146,7 +154,8 @@ get_hits_genome <-
     function(genome_bed,
              mart,
              maxmismatch,
-             probelengths) {
+             probelengths
+             arraytype = c("regular","Affy_ST")) {
 
         # read bed ----------------------------------------------------------------
         message("read .bed file")
@@ -235,6 +244,15 @@ get_hits_genome <-
             },
             bl_starts = blockStarts,
             starts = start)]
+
+
+        # change strand-orientation for Affy-ST
+        if(arraytype=="Affy_ST"){
+            strandnew <- drGenome$strand
+            strandnew[drGenome$strand=="+"] <- "-"
+            strandnew[drGenome$strand=="-"] <- "+"
+            drGenome$strand <- strandnew
+        }
 
         # transform to GRangesList object -----------------------------------------
         message("transform to GRangesList object")
