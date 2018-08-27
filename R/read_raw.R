@@ -63,9 +63,6 @@ read_raw_public <- function(datadir,
 
         message(paste("detected", metadata$gsm.gsm[exclude], "as outlier\n"))
 
-        group <- rep("include", length(iqrs))
-        group[exclude] <- "exclude"
-
         rawdata <-
             limma::subsetListOfArrays(
                 raw,
