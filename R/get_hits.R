@@ -154,7 +154,7 @@ get_hits_genome <-
     function(genome_bed,
              mart,
              maxmismatch,
-             probelengths
+             probelengths,
              arraytype = c("regular","Affy_ST")) {
 
         # read bed ----------------------------------------------------------------
