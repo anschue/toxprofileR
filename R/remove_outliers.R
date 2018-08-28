@@ -6,7 +6,6 @@
 #' @return The input data.frame with outlying measurements removed
 #' @export
 #'
-#' @examples
 remove_outliers <- function(nodeframe, plots = F) {
   library("outliers")
 

@@ -146,7 +146,7 @@ plot_portrait <- function(nodelist, tox_universe, tcta_paramframe = NULL, substa
 #' @param onlysig logical, if reponse should be filtered to signficant values
 #' @param output character string, if the output should be plotted ("plot") or plot data should be given as output ("data")
 #'
-#' @return
+#' @return Returns a grid plot of time and concentration portraits
 #' @export
 #'
 plot_portrait_grid <- function(nodelist, tox_universe, tcta_paramframe = NULL, substance = NULL,  type = c("code","median","modeled","parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), output = c("plot", "data")){

@@ -1,14 +1,14 @@
 #' Hill-Gauss Model
 #'
-#' @param dose
-#' @param time
-#' @param hillslope
-#' @param maxS50
-#' @param mu
-#' @param sigma
-#' @param maxGene
+#' @param dose concentration
+#' @param time time after exposure start
+#' @param hillslope hillslope
+#' @param maxS50 maximum Sensitivity
+#' @param mu aka t_max
+#' @param sigma sigma
+#' @param maxGene maximum logFC
 #'
-#' @return
+#' @return logFC at given time and concentration with given parameters
 #' @export
 #'
 hill_gauss <- function(dose, time, hillslope, maxS50, mu, sigma, maxGene) {
@@ -18,15 +18,15 @@ hill_gauss <- function(dose, time, hillslope, maxS50, mu, sigma, maxGene) {
 
 #' Gauss-Gauss Model
 #'
-#' @param dose
-#' @param time
-#' @param mconc
-#' @param sconc
-#' @param mu
-#' @param sigma
-#' @param maxGene
+#' @param dose concentration
+#' @param time time after exposure start
+#' @param mconc mconc
+#' @param sconc sconc
+#' @param mu t_max
+#' @param sigma simga
+#' @param maxGene maximum logFC
 #'
-#' @return
+#' @return logFC at given time and concentration with given parameters
 #' @export
 #'
 gauss_gauss <- function(dose, time, mconc, sconc, mu, sigma, maxGene) {

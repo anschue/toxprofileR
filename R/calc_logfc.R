@@ -5,7 +5,6 @@
 #' @return an EList with logFC values
 #' @export
 #'
-#' @examples
 calc_logfc <- function(elist) {
   elist_logfc <- elist
   times <- unique(elist$targets$time_hpe)

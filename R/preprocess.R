@@ -7,7 +7,6 @@
 #' @return a processed EList
 #' @export
 #'
-#' @examples
 preprocess <- function(elist, batchcorrect = F, batch) {
   elist.avg <- elist.median(elist)
 
