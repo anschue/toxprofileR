@@ -21,6 +21,8 @@ read_raw_public <- function(datadir,
         # loading raw data --------------------------------------------------------------
         metadata$FileName <- metadata$Array.Data.File
 
+        metadata <- metadata[!duplicated(metadata$FileName),]
+
         raw <- limma::read.maimages(
             metadata,
             names = metadata$gsm.gsm,
@@ -47,6 +49,7 @@ read_raw_public <- function(datadir,
         )
 
         # remove outlier array(s) -------------------------------------------------
+        message("outlier detection")
         include <- c(1:nrow(metadata))
 
         outliermetrics1 <- arrayQualityMetrics::outliers(log2(raw$E), method = "KS")
