@@ -84,7 +84,7 @@ create_tox_universe <-
     rownames(data) <- genes
 
     # merge own and meta-analysis data ------------------------------------
-    dataset.SOM <- merge.data.frame(logFCframe_all, data, by = 0, all = T)
+    dataset.SOM <- merge.data.frame(logFC_frame, data, by = 0, all = T)
     rownames(dataset.SOM) <- dataset.SOM$Row.names
     dataset.SOM <- dataset.SOM[, -1]
     dataset.SOM <- as.matrix(dataset.SOM)
