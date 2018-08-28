@@ -8,6 +8,7 @@
 #' @param includearchive logical, should published toxicogenomic data be included into SOM (default: T)
 #' @param seed The seed to be used for the intial map
 #' @param output logical, should analytical plots be given
+#' @param alpha learning parameter for SOM (default: 0.8, 0.005)
 #'
 #' @return A result list containing the som_model, the final input dataset (dataset.SOM), compiled metadata, and ProbeIDs.
 #' @export
@@ -16,6 +17,7 @@ create_tox_universe <-
   function(dslist,
              dimens = 60,
              dist.fct = "manhattan",
+             alpha = c(0.8, 0.005),
              includearchive = T,
              seed = 2312,
              output = T) {
@@ -113,7 +115,7 @@ create_tox_universe <-
       grid = som_grid,
       init = init,
       rlen = 1000,
-      alpha = c(0.5, 0.001),
+      alpha = alpha,
       radius = as.integer(c(
         quantile(c(0:dimens), 0.67), -quantile(c(0:dimens), 0.67)
       )),
