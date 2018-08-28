@@ -7,7 +7,22 @@
 hill_gauss(dose, time, hillslope, maxS50, mu, sigma, maxGene)
 }
 \arguments{
-\item{maxGene}{}
+\item{dose}{concentration}
+
+\item{time}{time after exposure start}
+
+\item{hillslope}{hillslope}
+
+\item{maxS50}{maximum Sensitivity}
+
+\item{mu}{aka t_max}
+
+\item{sigma}{sigma}
+
+\item{maxGene}{maximum logFC}
+}
+\value{
+logFC at given time and concentration with given parameters
 }
 \description{
 Hill-Gauss Model

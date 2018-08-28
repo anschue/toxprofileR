@@ -7,7 +7,22 @@
 gauss_gauss(dose, time, mconc, sconc, mu, sigma, maxGene)
 }
 \arguments{
-\item{maxGene}{}
+\item{dose}{concentration}
+
+\item{time}{time after exposure start}
+
+\item{mconc}{mconc}
+
+\item{sconc}{sconc}
+
+\item{mu}{t_max}
+
+\item{sigma}{simga}
+
+\item{maxGene}{maximum logFC}
+}
+\value{
+logFC at given time and concentration with given parameters
 }
 \description{
 Gauss-Gauss Model

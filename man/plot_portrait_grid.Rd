@@ -26,6 +26,9 @@ plot_portrait_grid(nodelist, tox_universe, tcta_paramframe = NULL,
 
 \item{output}{character string, if the output should be plotted ("plot") or plot data should be given as output ("data")}
 }
+\value{
+Returns a grid plot of time and concentration portraits
+}
 \description{
 Plot portrait grid
 }

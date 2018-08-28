@@ -7,9 +7,12 @@
 calc_logfc_public(data, comparison)
 }
 \arguments{
-\item{data}{}
+\item{data}{EList}
 
-\item{comparison}{}
+\item{comparison}{data.frame describing the comparison for logFC}
+}
+\value{
+dataframe of logFCs
 }
 \description{
 Calculate logFC of public microarray data

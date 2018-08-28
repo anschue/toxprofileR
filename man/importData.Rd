@@ -26,6 +26,6 @@ EListraw (limma class)
 \description{
 This function builds on the limma function read.maimages and
 imports raw data from a time and concentration dependent toxicogenomic
-experiment. It removes outlier arrays based on the IQR distribution and
+experiment. It removes outlier arrays based on the KS.test, and outlier test based on sum and 75% quantile. The function
 returns an EListRaw.
 }

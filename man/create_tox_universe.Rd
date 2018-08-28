@@ -5,7 +5,8 @@
 \title{Create toxicogenomic universe}
 \usage{
 create_tox_universe(dslist, dimens = 60, dist.fct = "manhattan",
-  includearchive = T, seed = 2312, output = T)
+  alpha = c(0.8, 0.005), includearchive = T, seed = 2312,
+  output = T)
 }
 \arguments{
 \item{dslist}{A list of ELists with smoothed logFC data to include in the learning procedure.}
@@ -13,6 +14,8 @@ create_tox_universe(dslist, dimens = 60, dist.fct = "manhattan",
 \item{dimens}{The dimension of the SOM (default: 60)}
 
 \item{dist.fct}{The distance function to be used (default: manhattan)}
+
+\item{alpha}{learning parameter for SOM (default: 0.8, 0.005)}
 
 \item{includearchive}{logical, should published toxicogenomic data be included into SOM (default: T)}
 

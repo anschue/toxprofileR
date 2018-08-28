@@ -2,8 +2,8 @@
 
 #' Calculate logFC of public microarray data
 #'
-#' @param data
-#' @param comparison
+#' @param data EList
+#' @param comparison data.frame describing the comparison for logFC
 #'
 #' @return dataframe of logFCs
 #' @export
