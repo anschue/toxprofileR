@@ -67,14 +67,15 @@ importData <-
                 posandsigf = "gIsPosAndSignif",
                 aboveBG = "gIsWellAboveBG",
                 bgSubSignal = "gBGSubSignal"
-            )
+            ),
+            verbose = F
         )
         ## not covered: SpotExtentX  gBGMeanSignal
 
 
         # output target table -----------------------------------------------------
         if (output) {
-            knitr::kable(targets)
+            print(knitr::kable(targets))
         }
 
         # outlier detection --------------------------------------------------------
@@ -107,10 +108,11 @@ importData <-
             limma::plotDensities((log2(raw$E)),
                                  legend = T,
                                  group = group,
-                                 col = c(2, "grey")
+                                 col = c(2, "grey"),
+                                 main = targets$substance[1]
             )
 
-            boxplot((log2(raw$E)), col = (as.numeric(as.factor(group)) + 2))
+            boxplot((log2(raw$E)), col = (as.numeric(as.factor(group)) + 2), main = targets$substance[1])
 
 
         }
