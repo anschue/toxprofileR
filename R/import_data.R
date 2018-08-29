@@ -79,66 +79,14 @@ importData <-
         }
 
         # outlier detection --------------------------------------------------------
-        include <- c(1:nrow(targets))
+        qc_array <- toxprofileR::arrayqc(log2(raw$E))
 
-        # KS statistics
-        outliermetrics1 <-
-            arrayQualityMetrics::outliers(log2(raw$E), method = "KS")
-
-        # Expression sums
-        sums <- colSums(log2(raw$E), na.rm = T)
-        th_up <-
-            (quantile(sums, 0.75, na.rm = T) + 1.5 * IQR(sums, na.rm = T))
-        th_down <-
-            (quantile(sums, 0.25, na.rm = T) - 1.5 * IQR(sums, na.rm = T))
-        outliermetrics2 <-
-            list(
-                threshold = c(th_up, th_down),
-                which = which(sums > th_up | sums < th_down)
-            )
-
-        # Quantiles
-        qs <-
-            apply(log2(raw$E),
-                  2,
-                  quantile,
-                  na.rm = TRUE,
-                  probs = c(0.25, 0.75))
-        th_up <-
-            (quantile(qs[2, ], 0.75, na.rm = T) + 1.5 * IQR(qs[2, ], na.rm = T))
-        th_down <-
-            (quantile(qs[1, ], 0.25, na.rm = T) - 1.5 * IQR(qs[1, ], na.rm = T))
-        outliermetrics3 <-
-            list(
-                threshold = c(th_up, th_down),
-                which = which(qs[2, ] > th_up | qs[1, ] < th_down)
-            )
-
-        # Euclidean distance
-        MDS_out <-
-            limma::plotMDS(log2(raw$E), top = (nrow(raw$E) / 5), plot = F)
-        distances <- apply(MDS_out$distance.matrix, 2, mean)
-        outliermetrics4 <-
-            arrayQualityMetrics::boxplotOutliers(distances, 1)
-
-
-        exclude_tab <- table(c(
-            as.numeric(outliermetrics1@which),
-            as.numeric(outliermetrics2$which),
-            as.numeric(outliermetrics3$which),
-            as.numeric(outliermetrics4$which)
-        ))
-
-        # exclude array if 2 of the tests detect it as outlier
-        exclude <- as.numeric(names(exclude_tab)[exclude_tab >= 2])
-        include <- include[!include %in% exclude]
-
-        if(length(exclude)>0){
-        message(paste("detected", targets$names[exclude], "as outlier\n"))
+        if(length(qc_array$exclude)>0){
+        message(paste("detected", targets$names[qc_array$exclude], "as outlier\n"))
         }
 
         group <- rep("include", nrow(targets))
-        group[exclude] <- "exclude"
+        group[qc_array$exclude] <- "exclude"
 
         # plots ---------------------------------------------------------------
         if (output) {
@@ -175,7 +123,7 @@ importData <-
                 limma::subsetListOfArrays(
                     raw,
                     i = c(1:dim(raw)[1]),
-                    j = include,
+                    j = qc_array$include,
                     IJ = c(
                         "E",
                         "Processederror",
