@@ -5,7 +5,8 @@
 \title{Read Microarray data from GEO or ArrayExpress}
 \usage{
 read_raw_public(datadir, rawformat = c("Agilent", "Affymetrix",
-  "Affymetrix_ST"), betweenArrayNorm = "cyclicloess", metadata)
+  "Affymetrix_ST"), betweenArrayNorm = "cyclicloess", metadata,
+  output = T)
 }
 \arguments{
 \item{datadir}{data directory}
@@ -15,6 +16,8 @@ read_raw_public(datadir, rawformat = c("Agilent", "Affymetrix",
 \item{betweenArrayNorm}{name of normalization method}
 
 \item{metadata}{metadataframe}
+
+\item{output}{logical if output plot should be produced}
 }
 \value{
 returns a normalized Elist

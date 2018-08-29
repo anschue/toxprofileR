@@ -4,6 +4,7 @@
 #' @param rawformat format of rawdatat (Agilen or Affymetrix)
 #' @param betweenArrayNorm name of normalization method
 #' @param metadata metadataframe
+#' @param output logical if output plot should be produced
 #'
 #' @return returns a normalized Elist
 #'
@@ -13,7 +14,8 @@
 read_raw_public <- function(datadir,
                             rawformat = c("Agilent", "Affymetrix", "Affymetrix_ST"),
                             betweenArrayNorm = "cyclicloess",
-                            metadata) {
+                            metadata,
+                            output = T) {
 
     # Agilent ---------------------------------------------------------------------------
     if (rawformat == "Agilent") {
@@ -50,27 +52,50 @@ read_raw_public <- function(datadir,
 
         # remove outlier array(s) -------------------------------------------------
         message("outlier detection")
-        include <- c(1:nrow(metadata))
+        qc_array <- toxprofileR::arrayqc(log2(raw$E))
 
-        outliermetrics1 <- arrayQualityMetrics::outliers(log2(raw$E), method = "KS")
-        outliermetrics2 <- arrayQualityMetrics::outliers(log2(raw$E), method = "sum")
-        outliermetrics3 <- arrayQualityMetrics::outliers(log2(raw$E), method = "upperquartile")
+        if(length(qc_array$exclude)>0){
+            message(paste("detected", metadata$gsm.gsm[qc_array$exclude], "as outlier\n"))
+        }
 
-        exclude <- table(c(as.numeric(outliermetrics1@which),
-                           as.numeric(outliermetrics2@which),
-                           as.numeric(outliermetrics3@which)))
+        group <- rep("include", nrow(metadata))
+        group[qc_array$exclude] <- "exclude"
 
-        exclude <- as.numeric(names(exclude)[exclude>=2])
+        # plots ---------------------------------------------------------------
+        if (output) {
+            # density plot
+            limma::plotDensities((log2(raw$E)),
+                                 legend = T,
+                                 group = group,
+                                 col = c(2, "grey"),
+                                 main = metadata$study_id[1]
+            )
 
-        include <- include[!include %in% exclude]
+            # boxplot
+            par(mar = c(12, 3, 2, 1))
+            boxplot(
+                log2(raw$E),
+                col = (as.numeric(as.factor(group)) + 2),
+                main = metadata$study_id[1],
+                las = 2
+            )
+            par(mar = c(5.1, 4.1, 4.1, 1))
 
-        message(paste("detected", metadata$gsm.gsm[exclude], "as outlier\n"))
+            # MDS plot
+            limma::plotMDS(
+                log2(raw$E),
+                labels = metadata$SampleName,
+                col = as.numeric(as.factor(group)) + 2
+            )
+
+
+        }
 
         rawdata <-
             limma::subsetListOfArrays(
                 raw,
                 i = c(1:dim(raw)[1]),
-                j = include,
+                j = qc_array$include,
                 IJ = c(
                     "E",
                     "Processederror",
@@ -158,24 +183,47 @@ read_raw_public <- function(datadir,
 
         # remove outlier array(s) -------------------------------------------------
         message("outlier detection")
-        include <- c(1:nrow(metadata))
+        qc_array <- toxprofileR::arrayqc(log2(exprs(data.raw)))
 
-        outliermetrics1 <- arrayQualityMetrics::outliers(log2(exprs(data.raw)), method = "KS")
-        outliermetrics2 <- arrayQualityMetrics::outliers(log2(exprs(data.raw)), method = "sum")
-        outliermetrics3 <- arrayQualityMetrics::outliers(log2(exprs(data.raw)), method = "upperquartile")
+        if(length(qc_array$exclude)>0){
+            message(paste("detected", metadata$gsm.gsm[qc_array$exclude], "as outlier\n"))
+        }
 
-        exclude <- table(c(as.numeric(outliermetrics1@which),
-                           as.numeric(outliermetrics2@which),
-                           as.numeric(outliermetrics3@which)))
+        group <- rep("include", ncol(exprs(data.raw)))
+        group[qc_array$exclude] <- "exclude"
 
-        exclude <- as.numeric(names(exclude)[exclude>=2])
+        # plots ---------------------------------------------------------------
+        if (output) {
+            # density plot
+            limma::plotDensities(log2(exprs(data.raw)),
+                                 legend = T,
+                                 group = group,
+                                 col = c(2, "grey"),
+                                 main = metadata$study_id[1]
+            )
 
-        include <- include[!include %in% exclude]
+            # boxplot
+            par(mar = c(12, 3, 2, 1))
+            boxplot(
+                log2(exprs(data.raw)),
+                col = (as.numeric(as.factor(group)) + 2),
+                main = metadata$study_id[1],
+                las = 2
+            )
+            par(mar = c(5.1, 4.1, 4.1, 1))
 
-        message(paste("detected", metadata$gsm.gsm[exclude], "as outlier\n"))
+            # MDS plot
+            limma::plotMDS(
+                log2(exprs(data.raw)),
+                labels = colnames(exprs(data.raw)),
+                col = as.numeric(as.factor(group)) + 2
+            )
 
-        data.raw1 <- data.raw[, include]
-        metadata <- metadata[include, ]
+
+        }
+
+        data.raw1 <- data.raw[, qc_array$include]
+        metadata <- metadata[qc_array$include, ]
 
         # normalization ---------------------------------------------------
         message("normalization (rma)")
