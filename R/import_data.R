@@ -75,7 +75,7 @@ importData <-
 
         # output target table -----------------------------------------------------
         if (output) {
-            print(knitr::kable(targets))
+            print(targets)
         }
 
         # outlier detection --------------------------------------------------------
