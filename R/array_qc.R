@@ -33,7 +33,7 @@ arrayqc <- function(exprs){
 
     # Euclidean distance
     MDS_out <-
-        limma::plotMDS(exprs, top = (nrow(raw$E) / 5), plot = F)
+        limma::plotMDS(exprs, top = ceiling(nrow(exprs) / 5), plot = F)
     distances <- apply(MDS_out$distance.matrix, 2, mean)
     dist_ex <- which(findInterval(distances,vec = c(quantile(distances, 0.25, na.rm = T) - 1 * IQR(distances, na.rm = T),
                                                     quantile(distances, 0.75, na.rm = T) + 1 * IQR(distances, na.rm = T)))!=1)
