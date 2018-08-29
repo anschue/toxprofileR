@@ -75,7 +75,7 @@ importData <-
 
         # output target table -----------------------------------------------------
         if (output) {
-            print(targets)
+            targets
         }
 
         # outlier detection --------------------------------------------------------
