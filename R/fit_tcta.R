@@ -2,11 +2,11 @@
 #'
 #' @param elist An EList containing normalized logFC values from one exposure experiment.
 #' @param extrema A dataframe containing extreme values for each node
-#' @param cluster "get" "sock" or "none"
+#' @param cluster Logical, if modeling should be parallelized
 #'
 #' @return A dataframe with fitted model parameters for each node
 #' @export
-fit_tcta <- function(elist, extrema, cluster = c("get", "SOCK", "none"), cln = 2) {
+fit_tcta <- function(elist, extrema, cluster = c(TRUE, FALSE), cln = 2) {
   library("hydromad")
   library("snow")
   library("outliers")
@@ -66,17 +66,18 @@ fit_tcta <- function(elist, extrema, cluster = c("get", "SOCK", "none"), cln = 2
   )
 
 
-  if (cluster == "get") {
-    # get set up cluster --------------------------------------------------
+  if (cluster) {
+    # check for external cluster --------------------------------------------------
     cl <- snow::getMPIcluster()
-  }
 
-  if (cluster == "SOCK") {
-    # set up cluster ---------------------------------------------
-     cl <- snow::makeMPIcluster(cln, type = "SOCK")
-  }
+    # if not available set up cluster ---------------------------------------------
+    if (is.null(cl)) {
+      clustertype <- 1
+      cl <- snow::makeMPIcluster(cln, type = "SOCK")
+    } else {
+      clustertype <- 0
+    }
 
-  if (cluster == "get"|cluster == "SOCK"){
     # load libraries on cluster ---------------------------------------------------
     snow::clusterEvalQ(cl = cl, expr = library("limma"))
     snow::clusterEvalQ(cl, expr = library("hydromad"))
@@ -91,13 +92,10 @@ fit_tcta <- function(elist, extrema, cluster = c("get", "SOCK", "none"), cln = 2
     tictoc::tic()
     tcta_paramlist_som <- snow::parLapply(cl = cl, x = nodelist_extrema, fun = toxprofileR::get_tcta_params, param_bounds = param_bounds)
     tictoc::toc()
-  }
-
-    if (cluster == "get") {
+    if (clustertype == 1) {
       snow::stopCluster(cl)
     }
-
-  if (cluster == "none"){
+  } else {
     # apply modeling without paralellization
     tictoc::tic()
     tcta_paramlist_som <- pbapply::pblapply(X = nodelist_extrema, FUN = toxprofileR::get_tcta_params, param_bounds = param_bounds)
