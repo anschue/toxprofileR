@@ -7,7 +7,7 @@
 #' @return A list containing indices for columns to include and exclude
 #' @export
 #'
-arrayqc <- function(exprs, qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5, d = 1), qc_sum = 2){
+arrayqc <- function(exprs, qc_coeff = c(ks = 3, sum = 3, iqr = 3, q = 3, d = 1), qc_sum = 1){
     include <- c(1:ncol(exprs))
 
     # KS statistics (taken from arrayQualityMetrics package)
@@ -26,7 +26,7 @@ arrayqc <- function(exprs, qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5,
 
     # IQR
 
-    iqrs <- apply(exprs, 2, IQR)
+    iqrs <- apply(exprs, 2, IQR, na.rm = T)
 
     iqrs_ex <- which(findInterval(iqrs,vec = c(quantile(iqrs, 0.25, na.rm = T) - qc_coeff["iqr"] * IQR(iqrs, na.rm = T),
                                                quantile(iqrs, 0.75, na.rm = T) + qc_coeff["iqr"] * IQR(iqrs, na.rm = T)))!=1)

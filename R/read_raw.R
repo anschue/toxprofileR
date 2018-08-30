@@ -18,8 +18,8 @@ read_raw_public <- function(datadir,
                             betweenArrayNorm = "cyclicloess",
                             metadata,
                             output = T,
-                            qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5, d = 1),
-                            qc_sum = 2) {
+                            qc_coeff = c(ks = 3, sum = 3, iqr = 3, q = 3, d = 1),
+                            qc_sum = 1) {
 
     # Agilent ---------------------------------------------------------------------------
     if (rawformat == "Agilent") {
@@ -56,7 +56,7 @@ read_raw_public <- function(datadir,
 
         # remove outlier array(s) -------------------------------------------------
         message("outlier detection")
-        qc_array <- toxprofileR::arrayqc(log2(raw$E), qc_coeff = qc_coeff, qc_sum = qc_sum)
+        qc_array <- toxprofileR::arrayqc(exprs = log2(raw$E), qc_coeff = qc_coeff, qc_sum = qc_sum)
 
         if(length(qc_array$exclude)>0){
             message(paste("detected", metadata$gsm.gsm[qc_array$exclude], "as outlier\n"))
