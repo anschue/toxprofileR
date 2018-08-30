@@ -2,11 +2,12 @@
 #'
 #' @param exprs An expression data.frame
 #' @param qc_coeff A named character vector giving the coefficient for acceptable intervals
+#' @param qc_sum Number of tests leading to array exclusion
 #'
 #' @return A list containing indices for columns to include and exclude
 #' @export
 #'
-arrayqc <- function(exprs, qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5, d = 1)){
+arrayqc <- function(exprs, qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5, d = 1), qc_sum = 2){
     include <- c(1:ncol(exprs))
 
     # KS statistics (taken from arrayQualityMetrics package)
@@ -62,7 +63,7 @@ arrayqc <- function(exprs, qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5,
     ))
 
     # exclude array if 2 of the tests detect it as outlier
-    exclude <- as.numeric(names(exclude_tab)[exclude_tab >= 2])
+    exclude <- as.numeric(names(exclude_tab)[exclude_tab >= qc_sum])
     include <- include[!include %in% exclude]
 
     out <- list(include = include, exclude = exclude)

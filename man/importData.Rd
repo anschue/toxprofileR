@@ -5,7 +5,8 @@
 \title{Import Array Data}
 \usage{
 importData(targetfile, datadir, scanID = 1, output = T,
-  removeOutliers = T)
+  removeOutliers = T, qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q =
+  1.5, d = 1), qc_sum = 2)
 }
 \arguments{
 \item{targetfile}{string, name of targetfile .csv, should contain columns
@@ -19,6 +20,10 @@ time_hpe,    type, comment, and    scan_ID}
 \item{output}{logical, should function return target (default: T)}
 
 \item{removeOutliers}{logical, should outliers be removed}
+
+\item{qc_coeff}{A named character vector giving the coefficient for acceptable intervals}
+
+\item{qc_sum}{Number of tests leading to array exclusion}
 }
 \value{
 EListraw (limma class)

@@ -4,10 +4,15 @@
 \alias{arrayqc}
 \title{Array Quality Control}
 \usage{
-arrayqc(exprs)
+arrayqc(exprs, qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5, d =
+  1), qc_sum = 2)
 }
 \arguments{
 \item{exprs}{An expression data.frame}
+
+\item{qc_coeff}{A named character vector giving the coefficient for acceptable intervals}
+
+\item{qc_sum}{Number of tests leading to array exclusion}
 }
 \value{
 A list containing indices for columns to include and exclude

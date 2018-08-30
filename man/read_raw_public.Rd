@@ -6,7 +6,8 @@
 \usage{
 read_raw_public(datadir, rawformat = c("Agilent", "Affymetrix",
   "Affymetrix_ST"), betweenArrayNorm = "cyclicloess", metadata,
-  output = T)
+  output = T, qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5, d =
+  1), qc_sum = 2)
 }
 \arguments{
 \item{datadir}{data directory}
@@ -18,6 +19,10 @@ read_raw_public(datadir, rawformat = c("Agilent", "Affymetrix",
 \item{metadata}{metadataframe}
 
 \item{output}{logical if output plot should be produced}
+
+\item{qc_coeff}{A named character vector giving the coefficient for acceptable intervals}
+
+\item{qc_sum}{Number of tests leading to array exclusion}
 }
 \value{
 returns a normalized Elist

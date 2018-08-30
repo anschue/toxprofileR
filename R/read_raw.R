@@ -6,6 +6,7 @@
 #' @param metadata metadataframe
 #' @param output logical if output plot should be produced
 #' @param qc_coeff A named character vector giving the coefficient for acceptable intervals
+#' @param qc_sum Number of tests leading to array exclusion
 #'
 #' @return returns a normalized Elist
 #'
@@ -17,7 +18,8 @@ read_raw_public <- function(datadir,
                             betweenArrayNorm = "cyclicloess",
                             metadata,
                             output = T,
-                            qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5, d = 1)) {
+                            qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5, d = 1),
+                            qc_sum = 2) {
 
     # Agilent ---------------------------------------------------------------------------
     if (rawformat == "Agilent") {
@@ -54,7 +56,7 @@ read_raw_public <- function(datadir,
 
         # remove outlier array(s) -------------------------------------------------
         message("outlier detection")
-        qc_array <- toxprofileR::arrayqc(log2(raw$E), qc_coeff = qc_coeff)
+        qc_array <- toxprofileR::arrayqc(log2(raw$E), qc_coeff = qc_coeff, qc_sum = qc_sum)
 
         if(length(qc_array$exclude)>0){
             message(paste("detected", metadata$gsm.gsm[qc_array$exclude], "as outlier\n"))
@@ -185,7 +187,7 @@ read_raw_public <- function(datadir,
 
         # remove outlier array(s) -------------------------------------------------
         message("outlier detection")
-        qc_array <- toxprofileR::arrayqc(log2(exprs(data.raw)), qc_coeff = qc_coeff)
+        qc_array <- toxprofileR::arrayqc(log2(exprs(data.raw)), qc_coeff = qc_coeff, qc_sum = qc_sum)
 
         if(length(qc_array$exclude)>0){
             message(paste("detected", metadata$gsm.gsm[qc_array$exclude], "as outlier\n"))

@@ -18,6 +18,7 @@
 #' @param removeOutliers logical, should outliers be removed
 #'
 #' @param qc_coeff A named character vector giving the coefficient for acceptable intervals
+#' @param qc_sum Number of tests leading to array exclusion
 #'
 #' @return EListraw (limma class)
 #'
@@ -30,7 +31,8 @@ importData <-
              scanID = 1,
              output = T,
              removeOutliers = T,
-             qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5, d = 1)) {
+             qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5, d = 1),
+             qc_sum = 2) {
         # read target file --------------------------------------------------------
         targets <- limma::readTargets(file = targetfile, sep = "\t")
         targets <- targets[targets$scan_ID == scanID,]
@@ -81,7 +83,7 @@ importData <-
         }
 
         # outlier detection --------------------------------------------------------
-        qc_array <- toxprofileR::arrayqc(log2(raw$E), qc_coeff = qc_coeff)
+        qc_array <- toxprofileR::arrayqc(log2(raw$E), qc_coeff = qc_coeff, qc_sum = qc_sum)
 
         if(length(qc_array$exclude)>0){
         message(paste("detected", targets$names[qc_array$exclude], "as outlier\n"))
