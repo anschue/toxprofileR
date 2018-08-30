@@ -2,6 +2,7 @@ rm(list = ls())
 # new array annotation --------------------------------------------------------
 load("./data-raw/Annotation/mapComplete.Rd")
 new_annotation <- map
+rm(map)
 
 # public toxicogenomic data ---------------------------------------------------
 x <- load("./data-raw/publicdata/logFC_frame.Rd")
@@ -13,4 +14,11 @@ load("./data-raw/toxuniverse/universe_nodeframe.Rd")
 load("./data-raw/toxuniverse/universe_grid.Rd")
 
 # add to internal data --------------------------------------------------------
-devtools::use_data(new_annotation, logFC_frame, nodeframe, comparisons_merge, grid, internal = T, overwrite = T)
+devtools::use_data(
+    grid,
+    logFC_frame,
+    new_annotation,
+    nodeframe,
+    internal = T,
+    overwrite = T
+)
