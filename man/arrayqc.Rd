@@ -4,8 +4,8 @@
 \alias{arrayqc}
 \title{Array Quality Control}
 \usage{
-arrayqc(exprs, qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5, d =
-  1), qc_sum = 2)
+arrayqc(exprs, qc_coeff = c(ks = 3, sum = 3, iqr = 3, q = 3, d = 1),
+  qc_sum = 1)
 }
 \arguments{
 \item{exprs}{An expression data.frame}

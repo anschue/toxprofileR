@@ -6,8 +6,8 @@
 \usage{
 read_raw_public(datadir, rawformat = c("Agilent", "Affymetrix",
   "Affymetrix_ST"), betweenArrayNorm = "cyclicloess", metadata,
-  output = T, qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q = 1.5, d =
-  1), qc_sum = 2)
+  output = T, qc_coeff = c(ks = 3, sum = 3, iqr = 3, q = 3, d = 1),
+  qc_sum = 1)
 }
 \arguments{
 \item{datadir}{data directory}

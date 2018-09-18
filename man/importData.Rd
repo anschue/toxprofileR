@@ -5,8 +5,8 @@
 \title{Import Array Data}
 \usage{
 importData(targetfile, datadir, scanID = 1, output = T,
-  removeOutliers = T, qc_coeff = c(ks = 1.5, sum = 1.5, iqr = 1.5, q =
-  1.5, d = 1), qc_sum = 2)
+  removeOutliers = T, qc_coeff = c(ks = 3, sum = 3, iqr = 3, q = 3, d =
+  1), qc_sum = 1)
 }
 \arguments{
 \item{targetfile}{string, name of targetfile .csv, should contain columns
