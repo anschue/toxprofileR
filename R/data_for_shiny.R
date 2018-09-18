@@ -1,7 +1,6 @@
-#' Create Shiny Data
+#' Create Shiny Plotlist
 #'
 #' @param dslist List of logFC data (one EList per substance)
-#' @param tcta_list fitted parameters for same substances
 #' @param ci_list list of CI differences
 #'
 #' @return a list of dataframes needed by the shiny app
@@ -9,7 +8,7 @@
 #'
 #' @import plotly
 #' @import ggplot2
-create_shiny_data <- function(dslist, tcta_list, ci_list) {
+create_shiny_plotlist <- function(dslist, ci_list) {
     # 1. Create metadataframe
     message("create metadataframe")
 
@@ -131,9 +130,22 @@ create_shiny_data <- function(dslist, tcta_list, ci_list) {
         })
 
     names(plotlist) <- unique(map_data_all_frame$mapID)
+return(list(targets_all = targets_all, plotlist = plotlist))
+}
 
 
-    # 3. create nodeplotlist -------------------------------------------------------------------
+
+#' Create nodeplot list for shiny app
+#'
+#' @param dslist List of logFC data (one EList per substance)
+#' @param tcta_list List of fitted parameters
+#'
+#' @return a list with data for nodeplots
+#' @export
+#'
+create_shiny_nodeplotlist <- function(dslist, tcta_list) {
+
+    # create nodeplotlist -------------------------------------------------------------------
     message("gather data for nodeplots")
 
     nodeplotlist_all <- lapply(names(dslist), function(substance) {
@@ -350,16 +362,14 @@ create_shiny_data <- function(dslist, tcta_list, ci_list) {
     # D_fit_3D_all$substance <- as.character(D_fit_3D_all$substance)
     # D_fit_3D_all <- D_fit_3D_all[!is.na(D_fit_3D_all$substance),]
 
-    shiny_data <- list(
-        targets_all = targets_all,
-        plotlist = plotlist,
+    shiny_node_data <- list(
         D_measured_all = D_measured_all,
         D_fit_all = D_fit_all,
         #D_fit_3D_all = D_fit_3D_all,
         Control_CIs_all = Control_CIs_all
     )
 
-    return(shiny_data)
+    return(shiny_node_data)
 
 }
 
