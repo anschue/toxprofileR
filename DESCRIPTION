@@ -19,7 +19,8 @@ Imports:
     kohonen (>= 3.0.5),
     hydromad (>= 0.9.15),
     nnet (>= 7.3.12),
-    data.table (>= 1.11.4)
+    data.table (>= 1.11.4),
+    plotly (>= 4.8.0)
 Remotes: floybix/hydromad
 RoxygenNote: 6.1.0
 biocViews:
