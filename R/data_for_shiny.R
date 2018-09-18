@@ -8,6 +8,7 @@
 #' @export
 #'
 #' @import plotly
+#' @import ggplot2
 create_shiny_data <- function(dslist, tcta_list, ci_list) {
     # 1. Create metadataframe
     message("create metadataframe")
