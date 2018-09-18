@@ -315,10 +315,10 @@ create_shiny_nodeplotlist <- function(dslist, tcta_list) {
                                                    out <-
                                                        list(
                                                            D_fit = D_fit,
+                                                           #D_fit_3D = D_fit_3D,
                                                            D_measured = D_measured,
-                                                           ControlCIs = ControlCIs,
-                                                           D_fit_3D = D_fit_3D
-                                                       )
+                                                           ControlCIs = ControlCIs
+                                                           )
                                                    return(out)
 
                                                } else{
