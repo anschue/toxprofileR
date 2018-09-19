@@ -401,7 +401,7 @@ mart <- biomaRt::useEnsembl(biomart = "ensembl",
 nodeannotation <- toxprofileR::getBM_annotation(as.character(nodeframe$ensembl), filter = "ensembl_gene_id", mart = mart)
 nodeannotation <- merge.data.frame(nodeannotation, nodeframe, by.x = "ensembl_gene_id", by.y = "ensembl", all = T)
 
-shiny_data <- c(shiny_plotlist, shiny_nodeplotlist, list(nodeannotation = nodeannotation))
+shiny_data <- c(shiny_plotlist, shiny_nodeplotlist, list(nodeannotation = nodeannotation, grid = grid))
 saveRDS(shiny_data, file = filename)
 
 message(paste("Shiny data stored as", filename))
