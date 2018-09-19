@@ -9,12 +9,14 @@
 #' @param seed The seed to be used for the intial map
 #' @param output logical, should analytical plots be given
 #' @param alpha learning parameter for SOM (default: 0.8, 0.005)
+#' @param logFC_frame data.frame with additional logFC to include for map learning
 #'
 #' @return A result list containing the som_model, the final input dataset (dataset.SOM), compiled metadata, and ProbeIDs.
 #' @export
 #'
 create_tox_universe <-
   function(dslist,
+           logFC_frame,
              dimens = 60,
              dist.fct = "manhattan",
              alpha = c(0.8, 0.005),
