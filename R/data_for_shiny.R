@@ -114,7 +114,7 @@ create_shiny_plotlist <- function(dslist, ci_list) {
                     limits = c(-5, 5),
                     values = colvec_special
                 ) +
-                scale_size(range = scale_range, limits = c(0, 4)) +
+                scale_size(range = scale_range) +
                 theme_bw() +
                 theme(
                     plot.background = element_blank(),
@@ -362,6 +362,11 @@ create_shiny_nodeplotlist <- function(dslist, tcta_list) {
     # D_fit_3D_all$substance <- as.character(D_fit_3D_all$substance)
     # D_fit_3D_all <- D_fit_3D_all[!is.na(D_fit_3D_all$substance),]
 
+    # node annotation
+
+
+
+
     shiny_node_data <- list(
         D_measured_all = D_measured_all,
         D_fit_all = D_fit_all,
@@ -373,4 +378,33 @@ create_shiny_nodeplotlist <- function(dslist, tcta_list) {
 
 }
 
+
+#' Save Shiny Data
+#'
+#' @param dslist List of logFC data (one EList per substance)
+#' @param ci_list list of CI differences
+#' @param tcta_list List of fitted parameters
+#' @param martversion martversion
+#' @param filename path and filename to be stored
+#'
+#' @return saves an RDS file with data for shiny
+#' @export
+save_shiny_data <- function(dslist, ci_list, tcta_list, martversion, filename){
+
+shiny_plotlist <- toxprofileR::create_shiny_plotlist(dslist = dslist, ci_list = ci_list)
+shiny_nodeplotlist <- toxprofileR::create_shiny_nodeplotlist(dslist = dslist, tcta_list = tcta_list)
+
+mart <- biomaRt::useEnsembl(biomart = "ensembl",
+                            dataset = "drerio_gene_ensembl",
+                            version = martversion)
+
+nodeannotation <- toxprofileR::getBM_annotation(as.character(nodeframe$ensembl), filter = "ensembl_gene_id", mart = mart)
+nodeannotation <- merge.data.frame(nodeannotation, nodeframe, by.x = "ensembl_gene_id", by.y = "ensembl", all = T)
+
+shiny_data <- c(shiny_plotlist, shiny_nodeplotlist, list(nodeannotation = nodeannotation))
+saveRDS(shiny_data, file = filename)
+
+message(paste("Shiny data stored as", filename))
+
+}
 
