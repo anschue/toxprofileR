@@ -134,16 +134,15 @@ create_tox_universe <-
     resultlist <- list(
       som_model = som_model,
       metadata = metadata,
-      comparisons_merge = comparisons_merge,
       nodeframe = nodeframe
     )
 
     if (output) {
+      hist(table(nodeframe$toxnode), main = "Number of genes per toxnode", xlab = "Gene count")
       plot(som_model, type = "changes")
       plot(som_model, type = "count")
       plot(som_model, type = "dist.neighbours")
       plot(som_model, type = "codes")
-      hist(table(nodeframe$toxnode), main = "Number of genes per toxnode", xlab = "Gene count")
     }
 
     return(resultlist)
