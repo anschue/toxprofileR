@@ -24,11 +24,6 @@ create_tox_universe <-
              seed = 2312,
              output = T) {
 
-    # load libraries --------------------------------------------------------------
-    library("limma")
-    library("kohonen")
-    library("tictoc")
-
     # check if probes are in the same order ---------------------------------------
 
     lapply(1:(length(dslist) - 1), function(id) {
@@ -72,14 +67,12 @@ create_tox_universe <-
         decreasing =
           T
       )]
+
     data <- data[!duplicated(genes), ]
     genes <- genes[!duplicated(genes)]
 
-    data <- data[genes != "NULL", ]
-    genes <- genes[genes != "NULL"]
-
-    data <- data[!grepl(pattern = "c", genes), ]
-    genes <- genes[!grepl(pattern = "c", genes)]
+    data <- data[!is.na(genes), ]
+    genes <- genes[!is.na(genes)]
 
     ProbeIDs_metalogFC <- data.frame(ProbeID = rownames(data), ensembl = genes)
 
@@ -93,7 +86,7 @@ create_tox_universe <-
 
     ###### initialize SOM###################################
     som_grid <-
-      somgrid(
+      kohonen::somgrid(
         xdim = dimens,
         ydim = dimens,
         topo = "rectangular",
