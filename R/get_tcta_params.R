@@ -1,15 +1,15 @@
 #' Get regression model parameters for one node
 #'
-#' @param nodeframe A dataframe containing logFC, time, concentration of a node
+#' @param nodedf A dataframe containing logFC, time, concentration of a node
 #' @param param_bounds A list containing parameter boundaries for hill-gauss and gauss-gauss model
 #'
 #' @return Returns a named vector with fitted model parameters
 #' @export
 #'
-get_tcta_params <- function(nodeframe, param_bounds) {
-  if (is.data.frame(nodeframe)) {
-    nodeframe <- toxprofileR::remove_outliers(nodeframe)
-    nodeframe <- nodeframe[!is.na(nodeframe$logFC), ]
+get_tcta_params <- function(nodedf, param_bounds) {
+  if (is.data.frame(nodedf)) {
+    nodedf <- toxprofileR::remove_outliers(nodedf)
+    nodedf <- nodedf[!is.na(nodedf$logFC), ]
 
     # define regression models --------------------------------------------
 
@@ -30,37 +30,37 @@ get_tcta_params <- function(nodeframe, param_bounds) {
 
     ### upregulation --------------
     Likelihood_theta_up <- function(theta) {
-      sum(dnorm(x = nodeframe$logFC - abund.funct(dose = nodeframe$concentration_umol_l, time = nodeframe$time_hpe, hillslope = theta[1], maxS50 = theta[2], mu = theta[3], sigma = theta[4], maxGene = nodeframe$max[1]), mean = 0, sd = theta[5], log = T))
+      sum(dnorm(x = nodedf$logFC - abund.funct(dose = nodedf$concentration_umol_l, time = nodedf$time_hpe, hillslope = theta[1], maxS50 = theta[2], mu = theta[3], sigma = theta[4], maxGene = nodedf$max[1]), mean = 0, sd = theta[5], log = T))
     }
 
     ### downregulation ------------
     Likelihood_theta_down <- function(theta) {
-      sum(dnorm(x = nodeframe$logFC - abund.funct(dose = nodeframe$concentration_umol_l, time = nodeframe$time_hpe, hillslope = theta[1], maxS50 = theta[2], mu = theta[3], sigma = theta[4], maxGene = nodeframe$min[1]), mean = 0, sd = theta[5], log = T))
+      sum(dnorm(x = nodedf$logFC - abund.funct(dose = nodedf$concentration_umol_l, time = nodedf$time_hpe, hillslope = theta[1], maxS50 = theta[2], mu = theta[3], sigma = theta[4], maxGene = nodedf$min[1]), mean = 0, sd = theta[5], log = T))
     }
 
     ## Gauss-Gauss --------------------------
 
     ### upregulation --------------
     Likelihood_theta_up_gau <- function(theta) {
-      sum(dnorm(x = nodeframe$logFC - abund.funct_gaugau(dose = nodeframe$concentration_umol_l, time = nodeframe$time_hpe, mconc = theta[1], sconc = theta[2], mu = theta[3], sigma = theta[4], maxGene = nodeframe$max[1]), mean = 0, sd = theta[5], log = T))
+      sum(dnorm(x = nodedf$logFC - abund.funct_gaugau(dose = nodedf$concentration_umol_l, time = nodedf$time_hpe, mconc = theta[1], sconc = theta[2], mu = theta[3], sigma = theta[4], maxGene = nodedf$max[1]), mean = 0, sd = theta[5], log = T))
     }
 
     ### downregulation ------------
     Likelihood_theta_down_gau <- function(theta) {
-      sum(dnorm(x = nodeframe$logFC - abund.funct_gaugau(dose = nodeframe$concentration_umol_l, time = nodeframe$time_hpe, mconc = theta[1], sconc = theta[2], mu = theta[3], sigma = theta[4], maxGene = nodeframe$min[1]), mean = 0, sd = theta[5], log = T))
+      sum(dnorm(x = nodedf$logFC - abund.funct_gaugau(dose = nodedf$concentration_umol_l, time = nodedf$time_hpe, mconc = theta[1], sconc = theta[2], mu = theta[3], sigma = theta[4], maxGene = nodedf$min[1]), mean = 0, sd = theta[5], log = T))
     }
 
 
     # define starting parameters ------------------------------------------
 
     starthillslope <- 1
-    startmaxS50 <- 1 / median(unique(nodeframe$concentration_umol_l[nodeframe$concentration_umol_l != 0]))
-    startmu <- median(unique(nodeframe$time_hpe))
+    startmaxS50 <- 1 / median(unique(nodedf$concentration_umol_l[nodedf$concentration_umol_l != 0]))
+    startmu <- median(unique(nodedf$time_hpe))
     startsigma <- 0.3
-    starterr <- sd(nodeframe$logFC[nodeframe$concentration_umol_l == min(nodeframe$concentration_umol_l) & nodeframe$time_hpe_factor == 3])
+    starterr <- sd(nodedf$logFC[nodedf$concentration_umol_l == min(nodedf$concentration_umol_l) & nodedf$time_hpe_factor == 3])
 
-    startmconc <- nodeframe$concentration_umol_l[which.max(abs(nodeframe$logFC))]
-    startmu_gau <- nodeframe$time_hpe[which.max(abs(nodeframe$logFC))]
+    startmconc <- nodedf$concentration_umol_l[which.max(abs(nodedf$logFC))]
+    startmu_gau <- nodedf$time_hpe[which.max(abs(nodedf$logFC))]
     startsconc <- 0.3
 
     initialg <- as.numeric(c(hillslope = starthillslope, maxS50 = startmaxS50, mu = startmu, sigma = startsigma, err = starterr))
@@ -119,17 +119,17 @@ get_tcta_params <- function(nodeframe, param_bounds) {
     # retrieve AICs for model ----------------------------------------------
 
     ## fit spline as "positive reference" ----------------------------------
-    nodeframe$ldose <- log(nodeframe$concentration_umol_l)
-    nodeframe$ltime <- log(nodeframe$time_hpe)
-    what <- mgcv::gam(formula = logFC ~ te(ldose, ltime, bs = "tp"), data = nodeframe[nodeframe$concentration_umol_l != 0, ])
+    nodedf$ldose <- log(nodedf$concentration_umol_l)
+    nodedf$ltime <- log(nodedf$time_hpe)
+    what <- mgcv::gam(formula = logFC ~ te(ldose, ltime, bs = "tp"), data = nodedf[nodedf$concentration_umol_l != 0, ])
 
     ## retrieve AICcs for Spline/Nullmodel as reference -------------------
-    n <- nrow(nodeframe)
+    n <- nrow(nodedf)
     knull <- 2
     kfull <- 5
 
     AIC_spline <- -2 * as.numeric(logLik(what)) + (2 * (attributes(logLik(what))$df + 1) * n / (n - attributes(logLik(what))$df - 2))
-    AIC_null <- -2 * as.numeric(logLik(lm(nodeframe$logFC ~ 1))) + (2 * (knull + 1) * n / (n - knull - 2))
+    AIC_null <- -2 * as.numeric(logLik(lm(nodedf$logFC ~ 1))) + (2 * (knull + 1) * n / (n - knull - 2))
 
     ## retrieve AICs for model fits ---------------------------------------
     AIC_up_hill <- -2 * as.numeric(-fit_up_hill$value) + (2 * (kfull + 1) * n / (n - kfull - 2))
@@ -175,8 +175,8 @@ get_tcta_params <- function(nodeframe, param_bounds) {
     finalmodelcoefs_down_hill <- fit_down_hill$par
     finalmodelcoefs_down_gauss <- fit_down_gauss$par
 
-    finalmodelcoefs_best_hill <- unlist(list(c(fit_up_hill$par, max = nodeframe$max[1]), c(fit_down_hill$par, max = nodeframe$min[1]))[[which.max(c(AICw_up_hill, AICw_down_hill))]])
-    finalmodelcoefs_best_gauss <- unlist(list(c(fit_up_gauss$par, max = nodeframe$max[1]), c(fit_down_gauss$par, max = nodeframe$min[1]))[[which.max(c(AICw_up_gauss, AICw_down_gauss))]])
+    finalmodelcoefs_best_hill <- unlist(list(c(fit_up_hill$par, max = nodedf$max[1]), c(fit_down_hill$par, max = nodedf$min[1]))[[which.max(c(AICw_up_hill, AICw_down_hill))]])
+    finalmodelcoefs_best_gauss <- unlist(list(c(fit_up_gauss$par, max = nodedf$max[1]), c(fit_down_gauss$par, max = nodedf$min[1]))[[which.max(c(AICw_up_gauss, AICw_down_gauss))]])
 
     names(finalmodelcoefs_best_hill) <- paste0(names(finalmodelcoefs_best_hill), "_best_hill")
     names(finalmodelcoefs_best_gauss) <- paste0(names(finalmodelcoefs_best_gauss), "_best_gauss")
@@ -209,10 +209,10 @@ get_tcta_params <- function(nodeframe, param_bounds) {
       Convergence_down_hill = fit_down_hill$convergence,
       Convergence_up_gauss = fit_up_gauss$convergence,
       Convergence_down_gauss = fit_down_gauss$convergence,
-      maxGene_up = nodeframe$max[1],
-      maxGene_down = nodeframe$min[1],
-      maxGene_up_sub = max(aggregate(nodeframe$logFC, by = list(nodeframe$concentration_umol_l, nodeframe$time_hpe_factor), median)[, "x"], na.rm = T),
-      maxGene_down_sub = min(aggregate(nodeframe$logFC, by = list(nodeframe$concentration_umol_l, nodeframe$time_hpe_factor), median)[, "x"], na.rm = T),
+      maxGene_up = nodedf$max[1],
+      maxGene_down = nodedf$min[1],
+      maxGene_up_sub = max(aggregate(nodedf$logFC, by = list(nodedf$concentration_umol_l, nodedf$time_hpe_factor), median)[, "x"], na.rm = T),
+      maxGene_down_sub = min(aggregate(nodedf$logFC, by = list(nodedf$concentration_umol_l, nodedf$time_hpe_factor), median)[, "x"], na.rm = T),
       direction_hill = c(1, -1)[which.max(c(AICw_up_hill, AICw_down_hill))],
       direction_gauss = c(1, -1)[which.max(c(AICw_up_gauss, AICw_down_gauss))],
       best_model = c(1, 1, 2, 2)[which.max(c(AICw_up_hill, AICw_down_hill, AICw_up_gauss, AICw_down_gauss))],
