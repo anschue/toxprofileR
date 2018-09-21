@@ -4,10 +4,10 @@
 \alias{get_tcta_params}
 \title{Get regression model parameters for one node}
 \usage{
-get_tcta_params(nodeframe, param_bounds)
+get_tcta_params(nodedf, param_bounds)
 }
 \arguments{
-\item{nodeframe}{A dataframe containing logFC, time, concentration of a node}
+\item{nodedf}{A dataframe containing logFC, time, concentration of a node}
 
 \item{param_bounds}{A list containing parameter boundaries for hill-gauss and gauss-gauss model}
 }

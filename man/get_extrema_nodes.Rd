@@ -4,10 +4,12 @@
 \alias{get_extrema_nodes}
 \title{Get extreme values across several experiments per toxnode}
 \usage{
-get_extrema_nodes(dslist)
+get_extrema_nodes(dslist, nodeframe)
 }
 \arguments{
 \item{dslist}{A list of ELists with normalized logFC values}
+
+\item{nodeframe}{a nodeframe describing the associations of genes in the toxicogenomic universe}
 }
 \value{
 A dataframe with minimum, maximum and absolute extreme value for each node

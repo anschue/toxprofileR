@@ -4,12 +4,14 @@
 \alias{create_shiny_nodeplotlist}
 \title{Create nodeplot list for shiny app}
 \usage{
-create_shiny_nodeplotlist(dslist, tcta_list)
+create_shiny_nodeplotlist(dslist, tcta_list, nodeframe)
 }
 \arguments{
 \item{dslist}{List of logFC data (one EList per substance)}
 
 \item{tcta_list}{List of fitted parameters}
+
+\item{nodeframe}{a nodeframe describing the associations of genes in the toxicogenomic universe}
 }
 \value{
 a list with data for nodeplots

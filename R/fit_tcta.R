@@ -3,17 +3,19 @@
 #' @param elist An EList containing normalized logFC values from one exposure experiment.
 #' @param extrema A dataframe containing extreme values for each node
 #' @param cluster Logical, if modeling should be parallelized
+#' @param nodeframe a nodeframe describing the associations of genes in the toxicogenomic universe
+#' @param cln
 #'
 #' @return A dataframe with fitted model parameters for each node
 #' @export
-fit_tcta <- function(elist, extrema, cluster = c(TRUE, FALSE), cln = 2) {
+fit_tcta <- function(elist, extrema, nodeframe, cluster = c(TRUE, FALSE), cln = 2) {
   library("hydromad")
   library("snow")
   library("outliers")
   library("mgcv")
 
   # create nodelist -------------------------------------------------------------
-  nodelist <- toxprofileR::create_nodelist(elist)
+  nodelist <- toxprofileR::create_nodelist(elist, nodeframe)
 
   nodelist_extrema <- lapply(seq(1, length(nodelist)), function(nodeID) {
     if (is.data.frame(nodelist[[nodeID]])) {

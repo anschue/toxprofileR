@@ -4,14 +4,18 @@
 \alias{fit_tcta}
 \title{Fit regression model on toxicogenomic profile}
 \usage{
-fit_tcta(elist, extrema, cluster = c(TRUE, FALSE), cln = 2)
+fit_tcta(elist, extrema, nodeframe, cluster = c(TRUE, FALSE), cln = 2)
 }
 \arguments{
 \item{elist}{An EList containing normalized logFC values from one exposure experiment.}
 
 \item{extrema}{A dataframe containing extreme values for each node}
 
+\item{nodeframe}{a nodeframe describing the associations of genes in the toxicogenomic universe}
+
 \item{cluster}{Logical, if modeling should be parallelized}
+
+\item{cln}{}
 }
 \value{
 A dataframe with fitted model parameters for each node

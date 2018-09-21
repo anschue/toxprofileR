@@ -1,16 +1,17 @@
 #' Get extreme values across several experiments per toxnode
 #'
 #' @param dslist A list of ELists with normalized logFC values
+#' @param nodeframe a nodeframe describing the associations of genes in the toxicogenomic universe
 #'
 #' @return A dataframe with minimum, maximum and absolute extreme value for each node
 #' @export
 #'
-get_extrema_nodes <- function(dslist) {
+get_extrema_nodes <- function(dslist, nodeframe) {
   library("pbapply")
   library("outliers")
 
   dslist_extrema <- pbapply::pblapply(X = seq(1, length(dslist)), FUN = function(substanceID) {
-    nodelist <- toxprofileR::create_nodelist(dslist[[substanceID]])
+    nodelist <- toxprofileR::create_nodelist(dslist[[substanceID]], nodeframe)
 
     # determine maximum for each gene (median of condition) -------------------
 

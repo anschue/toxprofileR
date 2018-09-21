@@ -1,10 +1,11 @@
 #' Create logFC Nodelist
 #'
 #' @param elist An limma EList object with normalized logFC values
+#' @param nodeframe a nodeframe describing the associations of genes in the toxicogenomic universe
 #'
 #' @return A List with logFC values for each node of the toxicogenomic universe
 #' @export
-create_nodelist <- function(elist) {
+create_nodelist <- function(elist, nodeframe) {
   nodeframe$ensembl <- as.character(nodeframe$ensembl)
   nodeframe$ProbeID <- as.character(nodeframe$ProbeID)
   elist$genes$ProbeName <- as.character(elist$genes$ProbeName)

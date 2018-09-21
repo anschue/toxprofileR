@@ -4,7 +4,8 @@
 \alias{save_shiny_data}
 \title{Save Shiny Data}
 \usage{
-save_shiny_data(dslist, ci_list, tcta_list, martversion, filename)
+save_shiny_data(dslist, ci_list, tcta_list, grid, nodeframe, martversion,
+  filename)
 }
 \arguments{
 \item{dslist}{List of logFC data (one EList per substance)}
@@ -12,6 +13,10 @@ save_shiny_data(dslist, ci_list, tcta_list, martversion, filename)
 \item{ci_list}{list of CI differences}
 
 \item{tcta_list}{List of fitted parameters}
+
+\item{grid}{universe grid}
+
+\item{nodeframe}{universe nodeframe}
 
 \item{martversion}{martversion}
 

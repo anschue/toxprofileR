@@ -4,12 +4,16 @@
 \alias{create_shiny_plotlist}
 \title{Create Shiny Plotlist}
 \usage{
-create_shiny_plotlist(dslist, ci_list)
+create_shiny_plotlist(dslist, ci_list, grid, nodeframe)
 }
 \arguments{
 \item{dslist}{List of logFC data (one EList per substance)}
 
 \item{ci_list}{list of CI differences}
+
+\item{grid}{universe grid}
+
+\item{nodeframe}{universe nodeframe}
 }
 \value{
 a list of dataframes needed by the shiny app

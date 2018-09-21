@@ -4,10 +4,10 @@
 \alias{remove_outliers}
 \title{Remove outliers}
 \usage{
-remove_outliers(nodeframe, plots = F)
+remove_outliers(nodedf, plots = F)
 }
 \arguments{
-\item{nodeframe}{A data.frame containing a "logFC" column}
+\item{nodedf}{A data.frame containing a "logFC" column}
 
 \item{plots}{logical, should plots with outliers be shown?}
 }

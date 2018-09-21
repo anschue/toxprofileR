@@ -4,12 +4,14 @@
 \alias{create_tox_universe}
 \title{Create toxicogenomic universe}
 \usage{
-create_tox_universe(dslist, dimens = 60, dist.fct = "manhattan",
-  alpha = c(0.8, 0.005), includearchive = T, seed = 2312,
-  output = T)
+create_tox_universe(dslist, logFC_frame, dimens = 60,
+  dist.fct = "manhattan", alpha = c(0.8, 0.005), includearchive = T,
+  seed = 2312, output = T)
 }
 \arguments{
 \item{dslist}{A list of ELists with smoothed logFC data to include in the learning procedure.}
+
+\item{logFC_frame}{data.frame with additional logFC to include for map learning}
 
 \item{dimens}{The dimension of the SOM (default: 60)}
 

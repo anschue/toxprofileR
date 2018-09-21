@@ -4,10 +4,12 @@
 \alias{create_nodelist}
 \title{Create logFC Nodelist}
 \usage{
-create_nodelist(elist)
+create_nodelist(elist, nodeframe)
 }
 \arguments{
 \item{elist}{An limma EList object with normalized logFC values}
+
+\item{nodeframe}{a nodeframe describing the associations of genes in the toxicogenomic universe}
 }
 \value{
 A List with logFC values for each node of the toxicogenomic universe

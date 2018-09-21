@@ -2,13 +2,15 @@
 #'
 #' @param dslist List of logFC data (one EList per substance)
 #' @param ci_list list of CI differences
+#' @param grid universe grid
+#' @param nodeframe universe nodeframe
 #'
 #' @return a list of dataframes needed by the shiny app
 #' @export
 #'
 #' @import plotly
 #' @import ggplot2
-create_shiny_plotlist <- function(dslist, ci_list) {
+create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
     # 1. Create metadataframe
     message("create metadataframe")
 
@@ -139,11 +141,12 @@ return(list(targets_all = targets_all, plotlist = plotlist))
 #'
 #' @param dslist List of logFC data (one EList per substance)
 #' @param tcta_list List of fitted parameters
+#' @param nodeframe a nodeframe describing the associations of genes in the toxicogenomic universe
 #'
 #' @return a list with data for nodeplots
 #' @export
 #'
-create_shiny_nodeplotlist <- function(dslist, tcta_list) {
+create_shiny_nodeplotlist <- function(dslist, tcta_list, nodeframe) {
 
     # create nodeplotlist -------------------------------------------------------------------
     message("gather data for nodeplots")
@@ -152,7 +155,7 @@ create_shiny_nodeplotlist <- function(dslist, tcta_list) {
         message(paste("Creating nodeplotlist for substance", substance, "\n"))
 
         data_logFC <- dslist[[substance]]
-        nodelist <- toxprofileR::create_nodelist(data_logFC)
+        nodelist <- toxprofileR::create_nodelist(data_logFC, nodeframe)
 
         conc_all <-
             data_logFC$targets$concentration_umol_l[data_logFC$targets$type != "recovery"]
@@ -386,13 +389,15 @@ create_shiny_nodeplotlist <- function(dslist, tcta_list) {
 #' @param tcta_list List of fitted parameters
 #' @param martversion martversion
 #' @param filename path and filename to be stored
+#' @param grid universe grid
+#' @param nodeframe universe nodeframe
 #'
 #' @return saves an RDS file with data for shiny
 #' @export
-save_shiny_data <- function(dslist, ci_list, tcta_list, martversion, filename){
+save_shiny_data <- function(dslist, ci_list, tcta_list, grid, nodeframe, martversion, filename){
 
-shiny_plotlist <- toxprofileR::create_shiny_plotlist(dslist = dslist, ci_list = ci_list)
-shiny_nodeplotlist <- toxprofileR::create_shiny_nodeplotlist(dslist = dslist, tcta_list = tcta_list)
+shiny_plotlist <- toxprofileR::create_shiny_plotlist(dslist = dslist, ci_list = ci_list, grid = grid, nodeframe = nodeframe)
+shiny_nodeplotlist <- toxprofileR::create_shiny_nodeplotlist(dslist = dslist, tcta_list = tcta_list, nodeframe = nodeframe)
 
 mart <- biomaRt::useEnsembl(biomart = "ensembl",
                             dataset = "drerio_gene_ensembl",
