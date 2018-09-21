@@ -66,7 +66,7 @@ create_tox_universe <-
 
     # take probes with highest IQR for duplicate probe --------------------
     IQRs <- apply(E_all, 1, IQR, na.rm = T)
-    data <- E_all[order(IQRs, decreasing = T), ]
+    data <- E_all[order(dslist[[1]]$genes$unique, IQRs, decreasing = T), ]
     genes <-
       unlist(as.character(dslist[[1]]$genes$ensembl_gene_id))[order(IQRs,
         decreasing =
