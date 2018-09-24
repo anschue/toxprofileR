@@ -179,16 +179,18 @@ fit_apical <-
             }, error = function(cond) {
                 return(NA)
             })
+
             fit_wb_ml = tryCatch({
                 bbmle::mle2(
                     minuslogl = LL_wb,
-                    start = list(t1 = -1, t2 = -1),
+                    start = list(t1 = 10, t2 = 10),
                     control = list(maxit = 5000),
                     data = df_t
                 )
             }, error = function(cond) {
                 return(NA)
             })
+
             fit_gl_ml = tryCatch({
                 bbmle::mle2(
                     minuslogl = LL_gl,
@@ -407,7 +409,7 @@ fit_apical <-
             fit_wb_ml = tryCatch({
                 bbmle::mle2(
                     minuslogl = LL_wb,
-                    start = list(t1 = -1, t2 = -1),
+                    start = list(t1 = 10, t2 = 10),
                     control = list(maxit = 5000),
                     data = df_t
                 )
