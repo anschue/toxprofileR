@@ -48,7 +48,7 @@ plot_nodecode <- function(nodelist, tox_universe, nodeIDs) {
 
 
 
-plot_noderesponse <- function(dslist, tcta_list, ci_list, nodeframe, nodeID, plot3D = TRUE){
+plot_noderesponse <- function(dslist, tcta_list, nodeframe, nodeID, plot3D = TRUE){
 
     breaksfunction<-function(xlim){
         df<-(xlim[2]/xlim[1])^(1/4)
@@ -163,7 +163,7 @@ plot_noderesponse <- function(dslist, tcta_list, ci_list, nodeframe, nodeID, plo
             colnames(ControlCIs) <- c("time_hpe", "min", "max")
             ControlCIs$substance <- substance
 
-            if(plot3D){
+            if(plot3D == TRUE){
             ###3D
             D_fit_3D <- data.frame(logFC=NA,
                                     time_hpe=expand.grid(seq(3,72,length.out = 50),
@@ -247,6 +247,15 @@ plot_noderesponse <- function(dslist, tcta_list, ci_list, nodeframe, nodeID, plo
             }))
     D_fit_all$substance <- as.character(D_fit_all$substance)
     D_fit_all <- D_fit_all[!is.na(D_fit_all$substance), ]
+
+    if(plot3D){
+    D_fit_3D_all <-
+        do.call("rbind", lapply(nodeplotlist_all, function(x) {
+            x["D_fit_3D"][[1]]
+        }))
+    D_fit_3D_all$substance <- as.character(D_fit_3D_all$substance)
+    D_fit_3D_all <- D_fit_3D_all[!is.na(D_fit_3D_all$substance), ]
+    }
 
     D_measured_all <-
         do.call("rbind", lapply(nodeplotlist_all, function(x) {
@@ -374,10 +383,11 @@ plot_noderesponse <- function(dslist, tcta_list, ci_list, nodeframe, nodeID, plo
         )
 
 print(poiplot_hill)
+print(poiplot_gauss)
 
-for(subst in unique(D_fit_3D$substance)){
-matrix_3D <- xtabs(logFC~concentration_umol_l+time_hpe, data=D_fit_3D[D_fit_3D$substance == subst,])
-plot3D::persp3D(z = matrix_3D ,x= as.numeric(rownames(matrix_3D)), y=as.numeric(colnames(matrix_3D)), col=NULL, colvar = NULL, facets = F, curtain = F,phi = 30,theta = 50,xlab="concentration",ylab="time",zlab="logFC",main=subst)
+for(subst in unique(D_fit_3D_all$substance)){
+matrix_3D <- xtabs(logFC~concentration_umol_l+time_hpe, data=D_fit_3D_all[D_fit_3D_all$substance == subst,])
+plot3D::persp3D(z = matrix_3D ,x= as.numeric(rownames(matrix_3D)), y=as.numeric(colnames(matrix_3D)), col=NULL, colvar = NULL, facets = F, curtain = F,phi = 30,theta = 50,xlab="concentration",ylab="time",zlab="logFC",main=subst, zlim = c(min(D_fit_3D_all$logFC, na.rm = T), max(D_fit_3D_all$logFC, na.rm = T)))
 }
 
 }
@@ -388,6 +398,7 @@ plot3D::persp3D(z = matrix_3D ,x= as.numeric(rownames(matrix_3D)), y=as.numeric(
 #'
 #' @param nodelist A nodelist created with toxprofileR::create_nodelist()
 #' @param tox_universe Toxicogenomic universe
+#' @param grid grid of toxicogenomic universe
 #' @param tcta_paramframe Optional, dataframe containing fitted parameter values for each node
 #' @param substance Optional, substance name
 #' @param time_hpe Time point to be plotted
@@ -401,13 +412,88 @@ plot3D::persp3D(z = matrix_3D ,x= as.numeric(rownames(matrix_3D)), y=as.numeric(
 #' @return either a ggplot printed or ggplot data, depending on the parameter "output"
 #' @export
 #'
-plot_portrait <- function(nodelist, tox_universe, tcta_paramframe = NULL, substance = NULL, time_hpe, concentration_level, type = c("code","median","modeled","parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), output = c("plot","data"), legend = FALSE){
+plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL, time_hpe, concentration_level, type = c("code","median","modeled","parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), siglevel= NULL, output = c("plot","data"), legend = FALSE){
     library("cowplot")
 
     hill_gauss<-function(dose,time,hillslope,maxS50,mu,sigma,maxGene){
         maxGene/(1+exp(-hillslope*(log(dose)-log(1/((maxS50)*exp(-0.5*(((log(time)-log(mu))/sigma)^2)))))))}
 
     colvec_special<-c(0,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,1)
+
+
+    if(type == "distances"){
+        plotdata <- data.frame(distance = unlist(lapply(seq_len(max(tox_universe$som_model$unit.classif)),function(x){
+            if(sum(tox_universe$som_model$unit.classif==x)>0){
+                median(dist(tox_universe$som_model$data[[1]][tox_universe$som_model$unit.classif==x,],method="manhattan"),na.rm = T)}else{NA}
+        })),
+        x = tox_universe$som_model$grid$pts[,1],
+        y = tox_universe$som_model$grid$pts[,2]
+        )
+
+
+        p1 <- ggplot(plotdata, aes(x,y)) +
+            geom_point(aes(size=distance,colour=distance))+
+            labs(x="", y="")+
+            scale_colour_distiller(palette = "Blues",direction = 1)+
+            scale_size(range=c(0.2,2))+
+        theme_bw()
+
+        if(output == "plot"){
+            print(p1)
+            return(NULL)
+        } else{
+            return(p1)
+        }
+    }
+
+    if(type == "n"){
+
+        plotdata <- data.frame(n = unlist(lapply(seq_len(max(tox_universe$som_model$unit.classif)),function(x){
+            sum(tox_universe$som_model$unit.classif==x)
+        })),
+        x = tox_universe$som_model$grid$pts[,1],
+        y = tox_universe$som_model$grid$pts[,2]
+        )
+
+
+        p1 <- ggplot(plotdata, aes(x,y)) +
+            geom_point(aes(size=n,colour=n))+
+            labs(x="", y="")+
+            scale_colour_distiller(palette = "Blues",direction = 1)+
+            scale_size(range=c(0.2,2))+
+        theme_bw()
+
+        p2 <- ggplot(plotdata)+geom_histogram(aes(x = n))
+
+        if(output == "plot"){
+            print(p1)
+            return(NULL)
+        } else{
+            return(p1)
+        }
+    }
+
+    if(type == "parameter"){
+        plotdata <- data.frame(value = unlist(tcta_paramframe[, parameter]),
+                               x = grid$pts[,1],
+                               y = grid$pts[,2]
+        )
+
+        if(onlysig){plotdata$value[siglevel==0]<-0}
+
+        p1 <- ggplot(plotdata, aes(x,y)) +
+            geom_point(aes(size=abs(siglevel),colour=value))+
+            labs(x="", y="")+
+            scale_colour_distiller(palette = "Blues",direction = 1)+
+            theme_bw()
+
+        if(output == "plot"){
+            print(p1)
+            return(NULL)
+        } else{
+            return(p1)
+        }
+    }
 
 
     if(type=="code"){
@@ -425,6 +511,9 @@ plot_portrait <- function(nodelist, tox_universe, tcta_paramframe = NULL, substa
     # }
     #
 
+
+
+
     if(type == "median"){
 
         plotdata <- data.frame(logFC = unlist(lapply(nodelist, function(nodedf){
@@ -433,9 +522,11 @@ plot_portrait <- function(nodelist, tox_universe, tcta_paramframe = NULL, substa
             nodedf.agg$x[nodedf.agg$concentration_level == concentration_level&nodedf.agg$time_hpe == time_hpe]
             } else {NA}
             })),
-            x = tox_universe$som_model$grid$pts[,1],
-            y = tox_universe$som_model$grid$pts[,2])
+            x = grid$pts[,1],
+            y = grid$pts[,2])
     }
+
+
 
     p1 <- ggplot(plotdata, aes(x,y)) +
     geom_point(aes(size=abs(logFC),colour=logFC))+
@@ -477,6 +568,7 @@ plot_portrait <- function(nodelist, tox_universe, tcta_paramframe = NULL, substa
 #'
 #' @param nodelist A nodelist created with toxprofileR::create_nodelist()
 #' @param tox_universe Toxicogenomic universe
+#' @param grid grid of toxicogenomic universe
 #' @param tcta_paramframe Optional, dataframe containing fitted parameter values for each node
 #' @param substance Optional, substance name
 #' @param type character string, type of response to be plotted; Possible values are  "code", "median", "modeled", "parameter"
@@ -487,7 +579,7 @@ plot_portrait <- function(nodelist, tox_universe, tcta_paramframe = NULL, substa
 #' @return Returns a grid plot of time and concentration portraits
 #' @export
 #'
-plot_portrait_grid <- function(nodelist, tox_universe, tcta_paramframe = NULL, substance = NULL,  type = c("code","median","modeled","parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), output = c("plot", "data")){
+plot_portrait_grid <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL,  type = c("code","median","modeled","parameter", "n"), parameter = NULL, onlysig = c(TRUE, FALSE), output = c("plot", "data")){
 library("cowplot")
 
     treatment_frame <- expand.grid(list(concentration_umol_l = sort(unique(nodelist[[1]]$concentration_umol_l)), time_hpe = sort(unique(nodelist[[1]]$time_hpe))))
@@ -498,7 +590,7 @@ library("cowplot")
         concentration_level <- nodelist[[1]]$concentration_level[nodelist[[1]]$concentration_umol_l == concentration_umol_l][1]
         time_hpe <- treatment_frame$time_hpe[treatID]
 
-        p <- toxprofileR::plot_portrait(nodelist, tox_universe, tcta_paramframe = tcta_paramframe, substance = substance, time_hpe = time_hpe, concentration_level = concentration_level, type = type, parameter = parameter, onlysig = onlysig, output = "data")
+        p <- toxprofileR::plot_portrait(nodelist, tox_universe, grid, tcta_paramframe = tcta_paramframe, substance = substance, time_hpe = time_hpe, concentration_level = concentration_level, type = type, parameter = parameter, onlysig = onlysig, output = "data")
 
         return(p)
     })

@@ -4,16 +4,18 @@
 \alias{plot_portrait}
 \title{Plot Tox Portrait}
 \usage{
-plot_portrait(nodelist, tox_universe, tcta_paramframe = NULL,
-  substance = NULL, time_hpe, concentration_level, type = c("code",
-  "median", "modeled", "parameter"), parameter = NULL,
-  onlysig = c(TRUE, FALSE), output = c("plot", "data"),
-  legend = FALSE)
+plot_portrait(nodelist, tox_universe = NULL, grid = NULL,
+  tcta_paramframe = NULL, substance = NULL, time_hpe,
+  concentration_level, type = c("code", "median", "modeled",
+  "parameter"), parameter = NULL, onlysig = c(TRUE, FALSE),
+  siglevel = NULL, output = c("plot", "data"), legend = FALSE)
 }
 \arguments{
 \item{nodelist}{A nodelist created with toxprofileR::create_nodelist()}
 
 \item{tox_universe}{Toxicogenomic universe}
+
+\item{grid}{grid of toxicogenomic universe}
 
 \item{tcta_paramframe}{Optional, dataframe containing fitted parameter values for each node}
 

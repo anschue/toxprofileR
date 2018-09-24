@@ -4,15 +4,17 @@
 \alias{plot_portrait_grid}
 \title{Plot portrait grid}
 \usage{
-plot_portrait_grid(nodelist, tox_universe, tcta_paramframe = NULL,
-  substance = NULL, type = c("code", "median", "modeled", "parameter"),
-  parameter = NULL, onlysig = c(TRUE, FALSE), output = c("plot",
-  "data"))
+plot_portrait_grid(nodelist, tox_universe = NULL, grid = NULL,
+  tcta_paramframe = NULL, substance = NULL, type = c("code",
+  "median", "modeled", "parameter", "n"), parameter = NULL,
+  onlysig = c(TRUE, FALSE), output = c("plot", "data"))
 }
 \arguments{
 \item{nodelist}{A nodelist created with toxprofileR::create_nodelist()}
 
 \item{tox_universe}{Toxicogenomic universe}
+
+\item{grid}{grid of toxicogenomic universe}
 
 \item{tcta_paramframe}{Optional, dataframe containing fitted parameter values for each node}
 
