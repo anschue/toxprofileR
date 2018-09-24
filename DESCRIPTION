@@ -21,7 +21,8 @@ Imports:
     nnet (>= 7.3.12),
     data.table (>= 1.11.4),
     plotly (>= 4.8.0),
-    plot3D
+    plot3D (>= 1.1.1),
+    bbmle (>= 1.0.20)
 Remotes: floybix/hydromad
 RoxygenNote: 6.1.0
 biocViews:
