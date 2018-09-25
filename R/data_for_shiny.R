@@ -96,10 +96,11 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
     # create list of mapplots -----------------------------------------------------
     colvec_special <-
         c(0, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 1)
-    scale_range <- c(0.2, 4.5)
+    scale_range <- c(0.3, 3)
+    size_limits <- c(0, 3)
 
-    map_data_all_frame$dotsize <- abs(map_data_all_frame$cidiff)
-    map_data_all_frame$dotsize[is.na(map_data_all_frame$dotsize)] <-
+
+    map_data_all_frame$cidiff[is.na(map_data_all_frame$cidiff)] <-
         0
 
 
@@ -108,7 +109,7 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
             toxmap <-
                 map_data_all_frame[map_data_all_frame$mapID == mapID,] %>%
                 ggplot(aes(x = x, y = y)) +
-                geom_point(aes(size = dotsize, colour = logFCmedian)) +
+                geom_point(aes(size = abs(cidiff), colour = logFCmedian)) +
                 labs(x = "", y = "") +
                 scale_colour_distiller(
                     palette = "RdBu",
@@ -116,7 +117,7 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
                     limits = c(-5, 5),
                     values = colvec_special
                 ) +
-                scale_size(range = scale_range) +
+                scale_size(range = scale_range, limits = size_limits) +
                 theme_bw() +
                 theme(
                     plot.background = element_blank(),
