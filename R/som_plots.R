@@ -583,13 +583,13 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
 #' @param substance Optional, substance name
 #' @param type character string, type of response to be plotted; Possible values are  "code", "median", "modeled", "parameter"
 #' @param parameter Optional, name of parameter to be plotted
+#' @param filename filename to save plot
 #' @param onlysig logical, if reponse should be filtered to signficant values
-#' @param output character string, if the output should be plotted ("plot") or plot data should be given as output ("data")
 #'
-#' @return Returns a grid plot of time and concentration portraits
+#' @return Saves a fingerprint grid in the given filename
 #' @export
 #'
-plot_portrait_grid <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL,  type = c("code","median","modeled"), parameter = NULL, onlysig = c(TRUE, FALSE), output = c("plot", "data")){
+plot_portrait_grid <- function(nodelist, filename, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL,  type = c("code","median","modeled"), parameter = NULL, onlysig = c(TRUE, FALSE)){
 library("cowplot")
 
     treatment_frame <- expand.grid(list(concentration_umol_l = sort(unique(nodelist[[1]]$concentration_umol_l[nodelist[[1]]$concentration_umol_l!=0])), time_hpe = sort(unique(nodelist[[1]]$time_hpe))))
@@ -615,18 +615,13 @@ library("cowplot")
     som_legend<-cowplot::get_legend(legendplot)
 
     somplot<-plot_grid(plot_grid(plotlist = plotlist,
-                                 nrow = length(unique(nodelist[[1]]$time_hpe))),
-                                 ncol= length(unique(nodelist[[1]]$concentration_umol_l)),
+                                 nrow = length(unique(nodelist[[1]]$time_hpe)),
+                                 ncol= length(unique(nodelist[[1]]$concentration_umol_l))),
                        plot_grid(NULL, som_legend, ncol=1),
                        rel_widths=c(length(unique(nodelist[[1]]$concentration_umol_l)), 1))
 
-    if(output == "plot"){
-        print(somplot)
-        return(NULL)
-    } else {
-        return(somplot)
-    }
 
+    save_plot(filename, somplot, ncol = length(unique(nodelist[[1]]$concentration_umol_l))+1, nrow = length(unique(nodelist[[1]]$time_hpe)))
 
 
 
