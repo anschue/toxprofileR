@@ -48,6 +48,16 @@ plot_nodecode <- function(nodelist, tox_universe, nodeIDs) {
 
 
 
+#' Plot noderesponse
+#'
+#' @param dslist a list of ELists containing logFCs
+#' @param tcta_list a list of parameter dataframes
+#' @param nodeframe universe nodeframe
+#' @param nodeID ID of node to be plotted
+#' @param plot3D logical, should 3D plots be given
+#'
+#' @return returns plots of measured and fitted noderesponse
+#' @export
 plot_noderesponse <- function(dslist, tcta_list, nodeframe, nodeID, plot3D = TRUE){
 
     breaksfunction<-function(xlim){
