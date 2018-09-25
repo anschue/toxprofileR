@@ -618,12 +618,12 @@ library("cowplot")
 
     somplot<-plot_grid(plot_grid(plotlist = plotlist,
                                  nrow = length(unique(nodelist[[1]]$time_hpe)),
-                                 ncol= length(unique(nodelist[[1]]$concentration_umol_l))),
+                                 ncol= length(unique(nodelist[[1]]$concentration_umol_l[nodelist[[1]]$concentration_umol_l!=0]))),
                        plot_grid(NULL, som_legend, ncol=1),
                        rel_widths=c(length(unique(nodelist[[1]]$concentration_umol_l)), 1))
 
 
-    save_plot(filename, somplot, ncol = length(unique(nodelist[[1]]$concentration_umol_l))+1, nrow = length(unique(nodelist[[1]]$time_hpe)))
+    save_plot(filename, somplot, nrow = length(unique(nodelist[[1]]$time_hpe)), ncol = (length(unique(nodelist[[1]]$concentration_umol_l[nodelist[[1]]$concentration_umol_l!=0]))+1))
 
 
 
