@@ -594,7 +594,7 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
 plot_portrait_grid <- function(nodelist, filename, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL,  type = c("code","median","modeled"), parameter = NULL, onlysig = c(TRUE, FALSE)){
 library("cowplot")
 
-    treatment_frame <- expand.grid(list(concentration_umol_l = sort(unique(nodelist[[1]]$concentration_umol_l[nodelist[[1]]$concentration_umol_l!=0])), time_hpe = sort(unique(nodelist[[1]]$time_hpe))))
+    treatment_frame <- expand.grid(list(concentration_umol_l = sort(unique(nodelist[[1]]$concentration_umol_l[nodelist[[1]]$concentration_umol_l!=0]),decreasing = F), time_hpe = sort(unique(nodelist[[1]]$time_hpe), decreasing = T)))
 
     plotlist <- lapply(seq(1,nrow(treatment_frame)), function(treatID){
 
