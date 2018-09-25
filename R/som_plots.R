@@ -589,16 +589,17 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
 #' @return Returns a grid plot of time and concentration portraits
 #' @export
 #'
-plot_portrait_grid <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL,  type = c("code","median","modeled","parameter", "n"), parameter = NULL, onlysig = c(TRUE, FALSE), output = c("plot", "data")){
+plot_portrait_grid <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL,  type = c("code","median","modeled"), parameter = NULL, onlysig = c(TRUE, FALSE), output = c("plot", "data")){
 library("cowplot")
 
-    treatment_frame <- expand.grid(list(concentration_umol_l = sort(unique(nodelist[[1]]$concentration_umol_l)), time_hpe = sort(unique(nodelist[[1]]$time_hpe))))
+    treatment_frame <- expand.grid(list(concentration_umol_l = sort(unique(nodelist[[1]]$concentration_umol_l[nodelist[[1]]$concentration_umol_l!=0])), time_hpe = sort(unique(nodelist[[1]]$time_hpe))))
 
     plotlist <- lapply(seq(1,nrow(treatment_frame)), function(treatID){
 
         concentration_umol_l <- treatment_frame$concentration_umol_l[treatID]
         concentration_level <- nodelist[[1]]$concentration_level[nodelist[[1]]$concentration_umol_l == concentration_umol_l][1]
         time_hpe <- treatment_frame$time_hpe[treatID]
+
 
         p <- toxprofileR::plot_portrait(nodelist, tox_universe, grid, tcta_paramframe = tcta_paramframe, substance = substance, time_hpe = time_hpe, concentration_level = concentration_level, type = type, parameter = parameter, onlysig = onlysig, output = "data")
 
