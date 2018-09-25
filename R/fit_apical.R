@@ -134,30 +134,17 @@ fit_apical <-
         cex.lab = 2,
         cex.axis = 1.5
         )
-        legend(
-            "topleft",
-            legend = paste(
-                unique(responsedf$exposure_start_hpf),
-                sort(unique(responsedf$exposure_end_hpf)),
-                sep = "-"
-            ),
-            col = c(1:length(
-                unique(responsedf$exposure_end_hpf)
-            )),
-            pch = c(1:length(
-                unique(responsedf$exposure_end_hpf)
-            )),
-            lwd = 3
-        )
+
 
         bestmodels_ml <- list()
         for (t in c(1:length(unique(responsedf$exposure_end_hpf)))) {
             df_t <-
                 responsedf[responsedf$exposure_end_hpf == sort(unique(responsedf$exposure_end_hpf))[t],]
+
             points((df_t$effect_lethal_count / df_t$n_testorganism) * 100 ~ df_t$concentration_mol_L,
                    col = t,
                    pch = t,
-                   cex = 2,
+                   cex = 1.5,
                    lwd = 2
             )
 
@@ -329,7 +316,7 @@ fit_apical <-
         }
 
 
-        EC50_lethal <- ECx_ml["0.5"][paste0("X", designtime), 1]
+        minEC50_lethal <- min(ECx_ml["0.5"], na.rm = T)
         EC25_lethal <- ECx_ml["0.25"][paste0("X", designtime), 1]
         EC05_lethal <- ECx_ml["0.005"][paste0("X", designtime), 1]
 
@@ -351,18 +338,22 @@ fit_apical <-
         legend(
             "topleft",
             title = "Exposure window [hpf]",
-            legend = paste(
-                unique(responsedf$exposure_start_hpf),
+            legend = c(paste0(
+                unique(responsedf$exposure_start_hpf),"-",
                 sort(unique(responsedf$exposure_end_hpf)),
-                sep = "-"
-            ),
+                " lethal"
+            ), paste0(
+                unique(responsedf$exposure_start_hpf),"-",
+                sort(unique(responsedf$exposure_end_hpf)),
+                " sublethal"
+            )),
             col = c(1:length(
                 unique(responsedf$exposure_end_hpf)
             )),
             pch = c(1:length(
                 unique(responsedf$exposure_end_hpf)
             )),
-            lwd = 3
+            lwd = 2
         )
 
 
@@ -381,9 +372,12 @@ fit_apical <-
         for (t in c(1:length(unique(responsedf$exposure_end_hpf)))) {
             df_t <-
                 responsedf[responsedf$exposure_end_hpf == sort(unique(responsedf$exposure_end_hpf))[t],]
-            points((df_t$effect_lethal_count / df_t$n_testorganism) * 100 ~ df_t$concentration_mol_L,
+
+            df_t <- df_t[!is.na(df_t$effect_sublethal_count),]
+
+            points((df_t$effect_sublethal_count / df_t$n_testorganism) * 100 ~ df_t$concentration_mol_L,
                    col = t,
-                   pch = t,
+                   pch = (t+length(unique(responsedf$exposure_end_hpf))),
                    cex = 2,
                    lwd = 2
             )
@@ -554,7 +548,7 @@ fit_apical <-
         }
 
 
-        EC50_sub <- ECx_ml["0.5"][paste0("X", designtime), 1]
+        minEC50_sub <- min(ECx_ml["0.5"], na.rm = T)
         EC25_sub <- ECx_ml["0.25"][paste0("X", designtime), 1]
         EC05_sub <- ECx_ml["0.005"][paste0("X", designtime), 1]
 
@@ -562,9 +556,9 @@ fit_apical <-
 
         return(
             list(
-                bestmodels_ml,
-                EC50_lethal = EC50_lethal,
-                EC50_sublethal = EC50_sub,
+                bestmodels_ml = bestmodels_ml,
+                minEC50_lethal = minEC50_lethal,
+                minEC50_sublethal = minEC50_sub,
                 EC25_lethal = EC25_lethal,
                 EC05 = EC05_lethal,
                 designconcentrations = designconcentrations
