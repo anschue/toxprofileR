@@ -350,9 +350,9 @@ fit_apical <-
             col = c(1:length(
                 unique(responsedf$exposure_end_hpf)
             )),
-            pch = c(1:length(
+            pch = c(1:(2*length(
                 unique(responsedf$exposure_end_hpf)
-            )),
+            ))),
             lwd = 2
         )
 
@@ -378,7 +378,7 @@ fit_apical <-
             points((df_t$effect_sublethal_count / df_t$n_testorganism) * 100 ~ df_t$concentration_mol_L,
                    col = t,
                    pch = (t+length(unique(responsedf$exposure_end_hpf))),
-                   cex = 2,
+                   cex = 1.5,
                    lwd = 2
             )
 
@@ -548,7 +548,9 @@ fit_apical <-
         }
 
 
-        minEC50_sub <- min(ECx_ml["0.5"], na.rm = T)
+        minEC50_sub <- tryCatch({min(ECx_ml["0.5"], na.rm = T)}, error = function(cond) {
+            return(minEC50_lethal)
+        })
         EC25_sub <- ECx_ml["0.25"][paste0("X", designtime), 1]
         EC05_sub <- ECx_ml["0.005"][paste0("X", designtime), 1]
 
