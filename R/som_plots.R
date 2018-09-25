@@ -495,6 +495,7 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
             geom_point(aes(size=abs(siglevel),colour=value))+
             labs(x="", y="")+
             scale_colour_distiller(palette = "Blues",direction = 1)+
+            scale_size(range=c(0.1,3),limits = c(0, 40))
             theme_bw()
 
         if(output == "plot"){
@@ -541,7 +542,8 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
     p1 <- ggplot(plotdata, aes(x,y)) +
     geom_point(aes(size=abs(logFC),colour=logFC))+
         labs(x="", y="")+
-        scale_colour_distiller(palette = "RdBu",direction = -1,limits=c(-4,4),values=colvec_special)+
+        scale_colour_distiller(palette = "RdBu",direction = -1, limits=c(-5,5))+
+        scale_size(range=c(0.1, 3))
         theme_bw()
 
     if(legend){
