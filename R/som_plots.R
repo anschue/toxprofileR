@@ -597,7 +597,6 @@ library("cowplot")
     treatment_frame <- expand.grid(list(concentration_umol_l = sort(unique(nodelist[[1]]$concentration_umol_l[nodelist[[1]]$concentration_umol_l!=0]),decreasing = F), time_hpe = sort(unique(nodelist[[1]]$time_hpe), decreasing = T)))
 
     plotlist <- lapply(seq(1,nrow(treatment_frame)), function(treatID){
-
         concentration_umol_l <- treatment_frame$concentration_umol_l[treatID]
         concentration_level <- nodelist[[1]]$concentration_level[nodelist[[1]]$concentration_umol_l == concentration_umol_l][1]
         time_hpe <- treatment_frame$time_hpe[treatID]
@@ -612,7 +611,7 @@ library("cowplot")
     concentration_level <- nodelist[[1]]$concentration_level[nodelist[[1]]$concentration_umol_l == concentration_umol_l][1]
     time_hpe <- treatment_frame$time_hpe[1]
 
-    legendplot <- toxprofileR::plot_portrait(nodelist, tox_universe, tcta_paramframe = tcta_paramframe, substance = substance, time_hpe = time_hpe, concentration_level = concentration_level, type = type, parameter = parameter, onlysig = onlysig, output = "data", legend = TRUE)
+    legendplot <- toxprofileR::plot_portrait(nodelist, tox_universe = tox_universe, grid = grid, tcta_paramframe = tcta_paramframe, substance = substance, time_hpe = time_hpe, concentration_level = concentration_level, type = type, parameter = parameter, onlysig = onlysig, output = "data", legend = TRUE)
 
     som_legend<-cowplot::get_legend(legendplot)
 
