@@ -71,13 +71,13 @@ get_tcta_params <- function(nodedf, param_bounds) {
 
     # Parameter estimation ------------------------------------------------
 
-    seeds <- c(1, 12, 123, 1234, 12345, 123456) # perfrom parameter estimation with different random seeds and afterwards select best fit
+    seeds <- c(1, 12, 123) # perfrom parameter estimation with different random seeds and afterwards select best fit
 
     ## Hill-Gauss ----------------------------
     ### up --------------
     results_up_hill <- lapply(seq(1, length(seeds)), function(seedID) {
       set.seed(seeds[seedID])
-      hydromad::SCEoptim(FUN = Likelihood_theta_up, par = initialg, control = list(fnscale = -1, returnpop = F), lower = as.numeric(c(hillslope = param_bounds$slope["min"], maxS50 = param_bounds$mS50["min"], mu = param_bounds$mu["min"], sigma = param_bounds$sigma["min"], err = param_bounds$err["min"])), upper = as.numeric(c(hillslope = param_bounds$slope["max"], maxS50 = param_bounds$mS50["max"], mu = param_bounds$mu["max"], sigma = param_bounds$sigma["max"], err = param_bounds$err["max"])))
+      hydromad::SCEoptim(FUN = Likelihood_theta_up, par = initialg, control = list(fnscale = -1, returnpop = F, ncomplex = 10), lower = as.numeric(c(hillslope = param_bounds$slope["min"], maxS50 = param_bounds$mS50["min"], mu = param_bounds$mu["min"], sigma = param_bounds$sigma["min"], err = param_bounds$err["min"])), upper = as.numeric(c(hillslope = param_bounds$slope["max"], maxS50 = param_bounds$mS50["max"], mu = param_bounds$mu["max"], sigma = param_bounds$sigma["max"], err = param_bounds$err["max"])))
     })
 
     fit_up_hill <- results_up_hill[[which.min(unlist(lapply(results_up_hill, function(results) {
@@ -87,7 +87,7 @@ get_tcta_params <- function(nodedf, param_bounds) {
     ### down ------------
     results_down_hill <- lapply(seq(1, length(seeds)), function(seedID) {
       set.seed(seeds[seedID])
-      hydromad::SCEoptim(FUN = Likelihood_theta_down, par = initialg, control = list(fnscale = -1, returnpop = F), lower = as.numeric(c(hillslope = param_bounds$slope["min"], maxS50 = param_bounds$mS50["min"], mu = param_bounds$mu["min"], sigma = param_bounds$sigma["min"], err = param_bounds$err["min"])), upper = as.numeric(c(hillslope = param_bounds$slope["max"], maxS50 = param_bounds$mS50["max"], mu = param_bounds$mu["max"], sigma = param_bounds$sigma["max"], err = param_bounds$err["max"])))
+      hydromad::SCEoptim(FUN = Likelihood_theta_down, par = initialg, control = list(fnscale = -1, returnpop = F, ncomplex = 10), lower = as.numeric(c(hillslope = param_bounds$slope["min"], maxS50 = param_bounds$mS50["min"], mu = param_bounds$mu["min"], sigma = param_bounds$sigma["min"], err = param_bounds$err["min"])), upper = as.numeric(c(hillslope = param_bounds$slope["max"], maxS50 = param_bounds$mS50["max"], mu = param_bounds$mu["max"], sigma = param_bounds$sigma["max"], err = param_bounds$err["max"])))
     })
 
     fit_down_hill <- results_down_hill[[which.min(unlist(lapply(results_down_hill, function(results) {
@@ -98,7 +98,7 @@ get_tcta_params <- function(nodedf, param_bounds) {
     ### up --------------
     results_up_gauss <- lapply(seq(1, length(seeds)), function(seedID) {
       set.seed(seeds[seedID])
-      hydromad::SCEoptim(FUN = Likelihood_theta_up_gau, par = initialg_gau, control = list(fnscale = -1, returnpop = F), lower = as.numeric(c(mconc = param_bounds$mconc["min"], sconc = param_bounds$sconc["min"], mu = param_bounds$mu["min"], sigma = param_bounds$sigma["min"], err = param_bounds$err["min"])), upper = as.numeric(c(mconc = param_bounds$mconc["max"], sconc = param_bounds$sconc["max"], mu = param_bounds$mu["max"], sigma = param_bounds$sigma["max"], err = param_bounds$err["max"])))
+      hydromad::SCEoptim(FUN = Likelihood_theta_up_gau, par = initialg_gau, control = list(fnscale = -1, returnpop = F, ncomplex = 10), lower = as.numeric(c(mconc = param_bounds$mconc["min"], sconc = param_bounds$sconc["min"], mu = param_bounds$mu["min"], sigma = param_bounds$sigma["min"], err = param_bounds$err["min"])), upper = as.numeric(c(mconc = param_bounds$mconc["max"], sconc = param_bounds$sconc["max"], mu = param_bounds$mu["max"], sigma = param_bounds$sigma["max"], err = param_bounds$err["max"])))
     })
 
     fit_up_gauss <- results_up_gauss[[which.min(unlist(lapply(results_up_gauss, function(results) {
@@ -108,7 +108,7 @@ get_tcta_params <- function(nodedf, param_bounds) {
     ### down ------------
     results_down_gauss <- lapply(seq(1, length(seeds)), function(seedID) {
       set.seed(seeds[seedID])
-      hydromad::SCEoptim(FUN = Likelihood_theta_down_gau, par = initialg_gau, control = list(fnscale = -1, returnpop = F), lower = as.numeric(c(mconc = param_bounds$mconc["min"], sconc = param_bounds$sconc["min"], mu = param_bounds$mu["min"], sigma = param_bounds$sigma["min"], err = param_bounds$err["min"])), upper = as.numeric(c(mconc = param_bounds$mconc["max"], sconc = param_bounds$sconc["max"], mu = param_bounds$mu["max"], sigma = param_bounds$sigma["max"], err = param_bounds$err["max"])))
+      hydromad::SCEoptim(FUN = Likelihood_theta_down_gau, par = initialg_gau, control = list(fnscale = -1, returnpop = F, ncomplex = 10), lower = as.numeric(c(mconc = param_bounds$mconc["min"], sconc = param_bounds$sconc["min"], mu = param_bounds$mu["min"], sigma = param_bounds$sigma["min"], err = param_bounds$err["min"])), upper = as.numeric(c(mconc = param_bounds$mconc["max"], sconc = param_bounds$sconc["max"], mu = param_bounds$mu["max"], sigma = param_bounds$sigma["max"], err = param_bounds$err["max"])))
     })
 
     fit_down_gauss <- results_down_gauss[[which.min(unlist(lapply(results_down_gauss, function(results) {
