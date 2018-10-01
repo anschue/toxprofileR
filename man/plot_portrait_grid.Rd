@@ -4,13 +4,15 @@
 \alias{plot_portrait_grid}
 \title{Plot portrait grid}
 \usage{
-plot_portrait_grid(nodelist, tox_universe = NULL, grid = NULL,
-  tcta_paramframe = NULL, substance = NULL, type = c("code",
-  "median", "modeled", "parameter", "n"), parameter = NULL,
-  onlysig = c(TRUE, FALSE), output = c("plot", "data"))
+plot_portrait_grid(nodelist, filename, tox_universe = NULL,
+  grid = NULL, tcta_paramframe = NULL, substance = NULL,
+  type = c("code", "median", "modeled"), parameter = NULL,
+  onlysig = c(TRUE, FALSE))
 }
 \arguments{
 \item{nodelist}{A nodelist created with toxprofileR::create_nodelist()}
+
+\item{filename}{filename to save plot}
 
 \item{tox_universe}{Toxicogenomic universe}
 
@@ -25,11 +27,9 @@ plot_portrait_grid(nodelist, tox_universe = NULL, grid = NULL,
 \item{parameter}{Optional, name of parameter to be plotted}
 
 \item{onlysig}{logical, if reponse should be filtered to signficant values}
-
-\item{output}{character string, if the output should be plotted ("plot") or plot data should be given as output ("data")}
 }
 \value{
-Returns a grid plot of time and concentration portraits
+Saves a fingerprint grid in the given filename
 }
 \description{
 Plot portrait grid
