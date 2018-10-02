@@ -8,7 +8,8 @@ plot_portrait(nodelist, tox_universe = NULL, grid = NULL,
   tcta_paramframe = NULL, substance = NULL, time_hpe,
   concentration_level, type = c("code", "median", "modeled",
   "parameter"), parameter = NULL, onlysig = c(TRUE, FALSE),
-  siglevel = NULL, output = c("plot", "data"), legend = FALSE)
+  siglevel = NULL, output = c("plot", "data"), legend = FALSE,
+  clip = NULL)
 }
 \arguments{
 \item{nodelist}{A nodelist created with toxprofileR::create_nodelist()}
@@ -31,9 +32,13 @@ plot_portrait(nodelist, tox_universe = NULL, grid = NULL,
 
 \item{onlysig}{logical, if reponse should be filtered to signficant values}
 
+\item{siglevel}{vector of significant effect levels}
+
 \item{output}{character string, if the output should be plotted ("plot") or plot data should be given as output ("data")}
 
 \item{legend}{logical, should a legend be given out (default: F)}
+
+\item{clip}{value, above which parameter values should be clipped}
 }
 \value{
 either a ggplot printed or ggplot data, depending on the parameter "output"

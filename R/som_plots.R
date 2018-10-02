@@ -418,18 +418,21 @@ plot3D::persp3D(z = matrix_3D ,x= as.numeric(rownames(matrix_3D)), y=as.numeric(
 #' @param onlysig logical, if reponse should be filtered to signficant values
 #' @param output character string, if the output should be plotted ("plot") or plot data should be given as output ("data")
 #' @param legend logical, should a legend be given out (default: F)
+#' @param siglevel vector of significant effect levels
+#' @param clip value, above which parameter values should be clipped
 #'
 #' @return either a ggplot printed or ggplot data, depending on the parameter "output"
 #' @export
 #'
-plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL, time_hpe, concentration_level, type = c("code","median","modeled","parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), siglevel= NULL, output = c("plot","data"), legend = FALSE){
+plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL, time_hpe, concentration_level, type = c("code","median","modeled","parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), siglevel= NULL, output = c("plot","data"), legend = FALSE, clip = NULL){
     library("cowplot")
 
     hill_gauss<-function(dose,time,hillslope,maxS50,mu,sigma,maxGene){
         maxGene/(1+exp(-hillslope*(log(dose)-log(1/((maxS50)*exp(-0.5*(((log(time)-log(mu))/sigma)^2)))))))}
 
-    colvec_special<-c(0,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,1)
-
+    # colvec_cubic<- scales::rescale(seq(-1,1,length.out = 100)^3)
+    # colvec_logistic <- scales::rescale(1/(1+exp(-10*(seq(0,1,length.out = 100)-0.1))))
+    # colvec_exp <- scales::rescale((seq(0,1,length.out = 100)^5))
 
     if(type == "distances"){
         plotdata <- data.frame(distance = unlist(lapply(seq_len(max(tox_universe$som_model$unit.classif)),function(x){
@@ -444,7 +447,7 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
         p1 <- ggplot(plotdata, aes(x,y)) +
             geom_point(aes(size=distance,colour=distance))+
             labs(x="", y="")+
-            scale_colour_distiller(palette = "Blues",direction = 1)+
+            scale_colour_distiller(palette = "Blues", direction = 1)+
             scale_size(range=c(0.2,2))+
         theme_bw()
 
@@ -489,13 +492,23 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
                                y = grid$pts[,2]
         )
 
+        colvec <- seq(0,1,length.out = 1000)
         if(onlysig){plotdata$value[siglevel==0]<-0}
+        if(!is.null(clip)){
+            roundvalue <- round(clip/(max(plotdata$value)-min(plotdata$value))*1000, digits = 0)
+            colvec[1:(1000-roundvalue)]<-seq(0,0.1,length.out = (1000-roundvalue))
+            colvec[(1000-roundvalue):1000] <- seq(0.1, 1, length.out = (roundvalue+1))
+
+
+            }
+
+
 
         p1 <- ggplot(plotdata, aes(x,y)) +
             geom_point(aes(size=abs(siglevel),colour=value))+
             labs(x="", y="")+
-            scale_colour_distiller(palette = "Blues",direction = 1)+
-            scale_size(range=c(0.1,3),limits = c(0, 40))
+            scale_colour_distiller(palette = "Blues",direction = 1, values = colvec)+
+            scale_size(range=c(0.1,3),limits = c(0, 40))+
             theme_bw()
 
         if(output == "plot"){
