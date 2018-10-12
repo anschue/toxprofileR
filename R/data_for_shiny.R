@@ -135,7 +135,7 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
 
     names(plotlist) <- unique(map_data_all_frame$mapID)
 
-    maplegend <- ggpbubr::as_ggplot(
+    maplegend <- ggpubr::as_ggplot(
         ggpubr::get_legend(
             plotlist[[1]]+
                       theme(legend.position = "right",
