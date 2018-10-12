@@ -58,7 +58,7 @@ plot_nodecode <- function(nodelist, tox_universe, nodeIDs) {
 #'
 #' @return returns plots of measured and fitted noderesponse
 #' @export
-plot_noderesponse <- function(dslist, tcta_list, nodeframe, nodeID, plot3D = TRUE){
+plot_noderesponse <- function(dslist, tcta_list, nodeframe, nodeID, plot3D = TRUE, output = "plot"){
 
     breaksfunction<-function(xlim){
         df<-(xlim[2]/xlim[1])^(1/4)
@@ -392,13 +392,31 @@ plot_noderesponse <- function(dslist, tcta_list, nodeframe, nodeID, plot3D = TRU
             lwd = 0.75
         )
 
-print(poiplot_hill)
-print(poiplot_gauss)
 
+
+if(plot3D){
+list3D <- list()
 for(subst in unique(D_fit_3D_all$substance)){
 matrix_3D <- xtabs(logFC~concentration_umol_l+time_hpe, data=D_fit_3D_all[D_fit_3D_all$substance == subst,])
-plot3D::persp3D(z = matrix_3D ,x= as.numeric(rownames(matrix_3D)), y=as.numeric(colnames(matrix_3D)), col=NULL, colvar = NULL, facets = F, curtain = F,phi = 30,theta = 50,xlab="concentration",ylab="time",zlab="logFC",main=subst, zlim = c(min(D_fit_3D_all$logFC, na.rm = T), max(D_fit_3D_all$logFC, na.rm = T)))
+plot3D::persp3D(z = matrix_3D ,x= as.numeric(rownames(matrix_3D)), y=as.numeric(colnames(matrix_3D)), col=NULL, colvar = NULL, facets = F, curtain = F,phi = 30,theta = 50,xlab="concentration",ylab="time",zlab="logFC",main=subst, zlim = c(min(D_fit_3D_all$logFC, na.rm = T), max(D_fit_3D_all$logFC, na.rm = T)), cex.lab = 2, resfac = 1, zmin = 0)
+list3D[[subst]] <- recordPlot()
+dev.off()
 }
+}
+
+    if(output == "plot"){
+    print(poiplot_hill)
+    print(poiplot_gauss)
+    list3D
+    return(NULL)
+    }
+
+    if(output == "data"){
+
+        return(list(hill = poiplot_hill, gauss = poiplot_gauss, list3D = list3D))
+
+    }
+
 
 }
 
