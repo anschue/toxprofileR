@@ -64,7 +64,7 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
                         node = node,
                         x = as.numeric(grid$pts[node, "x"]),
                         y = as.numeric(grid$pts[node, "y"]),
-                        logFCmedian = median(dslist[[substance]][["E"]][probes, samples], na.rm = T),
+                        logFCmedian = round(median(dslist[[substance]][["E"]][probes, samples], na.rm = T), digits = 2),
                         logFChill = if (is.data.frame(ci_list[[substance]][[node]])) {
                             ci_list[[substance]][[node]][ci_list[[substance]][[node]][, "concentration_level"] == concentration &
                                                              ci_list[[substance]][[node]][, "time_hpe"] == time, "logFC_hill"]
@@ -72,8 +72,8 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
                             0
                         },
                         cidiff = if (is.data.frame(ci_list[[substance]][[node]])) {
-                            ci_list[[substance]][[node]][ci_list[[substance]][[node]][, "concentration_level"] == concentration &
-                                                             ci_list[[substance]][[node]][, "time_hpe"] == time, "diff_hill"]
+                            round(ci_list[[substance]][[node]][ci_list[[substance]][[node]][, "concentration_level"] == concentration &
+                                                             ci_list[[substance]][[node]][, "time_hpe"] == time, "diff_hill"], digits = 2)
                         } else{
                             0
                         }
@@ -112,12 +112,13 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
                 geom_point(aes(size = abs(cidiff), colour = logFCmedian)) +
                 labs(x = "", y = "") +
                 scale_colour_distiller(
+                    name = "logFC",
                     palette = "RdBu",
                     direction = -1,
                     limits = c(-5, 5),
                     values = colvec_special
                 ) +
-                scale_size(range = scale_range, limits = size_limits) +
+                scale_size(name = "sum(CI)",range = scale_range, limits = size_limits) +
                 theme_bw() +
                 theme(
                     plot.background = element_blank(),
@@ -133,7 +134,16 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
         })
 
     names(plotlist) <- unique(map_data_all_frame$mapID)
-return(list(targets_all = targets_all, plotlist = plotlist))
+
+    maplegend <- ggpbubr::as_ggplot(
+        ggpubr::get_legend(
+            plotlist[[1]]+
+                      theme(legend.position = "right",
+                      legend.direction = "vertical",
+                      legend.box = "vertical"
+                )))
+
+return(list(targets_all = targets_all, plotlist = plotlist, maplegend = maplegend))
 }
 
 
@@ -400,12 +410,21 @@ save_shiny_data <- function(dslist, ci_list, tcta_list, grid, nodeframe, martver
 shiny_plotlist <- toxprofileR::create_shiny_plotlist(dslist = dslist, ci_list = ci_list, grid = grid, nodeframe = nodeframe)
 shiny_nodeplotlist <- toxprofileR::create_shiny_nodeplotlist(dslist = dslist, tcta_list = tcta_list, nodeframe = nodeframe)
 
-mart <- biomaRt::useEnsembl(biomart = "ensembl",
-                            dataset = "drerio_gene_ensembl",
-                            version = martversion)
+# mart <- biomaRt::useEnsembl(biomart = "ensembl",
+#                             dataset = "drerio_gene_ensembl",
+#                             version = martversion)
+
+message("retrieving mart version 93")
+mart <- biomaRt::useMart(biomart = "ensembl",dataset = "drerio_gene_ensembl", host = "jul2018.archive.ensembl.org")
 
 nodeannotation <- toxprofileR::getBM_annotation(as.character(nodeframe$ensembl), filter = "ensembl_gene_id", mart = mart)
 nodeannotation <- merge.data.frame(nodeannotation, nodeframe, by.x = "ensembl_gene_id", by.y = "ensembl", all = T)
+
+# collapse list elements to make it work with DT later
+nodeannotation$hsapiens_homolog_associated_gene_name <- unlist(lapply(nodeannotation$hsapiens_homolog_associated_gene_name, paste, collapse = "; "))
+nodeannotation$name_1006 <- unlist(lapply(nodeannotation$name_1006, paste, collapse = "; "))
+nodeannotation$interpro_description <- unlist(lapply(nodeannotation$interpro_description, paste, collapse = "; "))
+nodeannotation$phenotype_description <- unlist(lapply(nodeannotation$phenotype_description, paste, collapse = "; "))
 
 shiny_data <- c(shiny_plotlist, shiny_nodeplotlist, list(nodeannotation = nodeannotation, grid = grid))
 saveRDS(shiny_data, file = filename)

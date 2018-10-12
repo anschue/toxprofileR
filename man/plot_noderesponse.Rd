@@ -4,7 +4,8 @@
 \alias{plot_noderesponse}
 \title{Plot noderesponse}
 \usage{
-plot_noderesponse(dslist, tcta_list, nodeframe, nodeID, plot3D = TRUE)
+plot_noderesponse(dslist, tcta_list, nodeframe, nodeID, plot3D = TRUE,
+  output = "plot")
 }
 \arguments{
 \item{dslist}{a list of ELists containing logFCs}
