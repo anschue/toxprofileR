@@ -442,7 +442,7 @@ dev.off()
 #' @return either a ggplot printed or ggplot data, depending on the parameter "output"
 #' @export
 #'
-plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL, time_hpe, concentration_level, type = c("code","median","modeled","parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), siglevel= NULL, output = c("plot","data"), legend = FALSE, clip = NULL){
+plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL, time_hpe, concentration_level, type = c("code","median","modeled","parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), siglevel= NULL, output = c("plot","data"), legend = FALSE, clip = NULL, colvec = NULL){
     library("cowplot")
 
     hill_gauss<-function(dose,time,hillslope,maxS50,mu,sigma,maxGene){
@@ -573,7 +573,7 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
     p1 <- ggplot(plotdata, aes(x,y)) +
     geom_point(aes(size=abs(logFC),colour=logFC))+
         labs(x="", y="")+
-        scale_colour_distiller(palette = "RdBu",direction = -1, limits=c(-5,5))+
+        scale_colour_distiller(palette = "RdBu",direction = -1, limits=c(-5,5), values = colvec)+
         scale_size(range=c(0.1, 3))
         theme_bw()
 
@@ -622,7 +622,7 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
 #' @return Saves a fingerprint grid in the given filename
 #' @export
 #'
-plot_portrait_grid <- function(nodelist, filename, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL,  type = c("code","median","modeled"), parameter = NULL, onlysig = c(TRUE, FALSE)){
+plot_portrait_grid <- function(nodelist, filename, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL,  type = c("code","median","modeled"), parameter = NULL, onlysig = c(TRUE, FALSE), colvec = NULL){
 library("cowplot")
 
     treatment_frame <- expand.grid(list(concentration_umol_l = sort(unique(nodelist[[1]]$concentration_umol_l[nodelist[[1]]$concentration_umol_l!=0]),decreasing = F), time_hpe = sort(unique(nodelist[[1]]$time_hpe), decreasing = T)))
@@ -633,7 +633,7 @@ library("cowplot")
         time_hpe <- treatment_frame$time_hpe[treatID]
 
 
-        p <- toxprofileR::plot_portrait(nodelist, tox_universe, grid, tcta_paramframe = tcta_paramframe, substance = substance, time_hpe = time_hpe, concentration_level = concentration_level, type = type, parameter = parameter, onlysig = onlysig, output = "data")
+        p <- toxprofileR::plot_portrait(nodelist, tox_universe, grid, tcta_paramframe = tcta_paramframe, substance = substance, time_hpe = time_hpe, concentration_level = concentration_level, type = type, parameter = parameter, onlysig = onlysig, output = "data", colvec = colvec)
 
         return(p)
     })
