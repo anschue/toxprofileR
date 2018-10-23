@@ -507,10 +507,11 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
     if(type == "parameter"){
         plotdata <- data.frame(value = unlist(tcta_paramframe[, parameter]),
                                x = grid$pts[,1],
-                               y = grid$pts[,2]
+                               y = grid$pts[,2],
+                               siglevel = siglevel
         )
 
-        colvec <- seq(0,1,length.out = 1000)
+        #colvec <- seq(0,1,length.out = 1000)
         if(onlysig){plotdata$value[siglevel==0]<-0}
         # if(!is.null(clip)){
         #     roundvalue <- round(clip/(max(plotdata$value)-min(plotdata$value))*1000, digits = 0)
@@ -520,11 +521,10 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
 
 
         p1 <- ggplot(plotdata, aes(x,y)) +
-            geom_point(aes(size=abs(siglevel),colour=value))+
+            geom_point(aes(size=abs(siglevel),colour=log(value)))+
             labs(x="", y="")+
-            scale_colour_gradientn(colours = c("white","goldenrod","darkorange","firebrick","sienna","brown","coral4"),
-                                   values = sort(c(0,clip/4,clip/2,clip,clip*2,clip*4, max(plotdata$value, na.rm = T)))/max(plotdata$value, na.rm = T))+
-            scale_size("sum(CI)",range=c(1,3),limits = c(0, 40))+
+            scale_colour_gradientn(colours = c("white","goldenrod","darkorange","firebrick","sienna","brown","coral4"),na.value = "white")+
+            scale_size("sum(CI)",range=c(1,3),limits = c(0,40))+
             theme_bw()
 
 
