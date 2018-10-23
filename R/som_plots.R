@@ -514,20 +514,19 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
         if(onlysig){plotdata$value[siglevel==0]<-0}
         if(!is.null(clip)){
             roundvalue <- round(clip/(max(plotdata$value)-min(plotdata$value))*1000, digits = 0)
-            colvec[1:(1000-roundvalue)]<-seq(0,0.1,length.out = (1000-roundvalue))
-            colvec[(1000-roundvalue):1000] <- seq(0.1, 1, length.out = (roundvalue+1))
-
-
-            }
-
+            colvec[1:(1000-roundvalue)]<-seq(0,0.05,length.out = (1000-roundvalue))
+            colvec[(1000-roundvalue):1000] <- seq(0.05, 1, length.out = (roundvalue+1))
+        }
 
 
         p1 <- ggplot(plotdata, aes(x,y)) +
             geom_point(aes(size=abs(siglevel),colour=value))+
             labs(x="", y="")+
-            scale_colour_distiller(palette = "Blues",direction = 1, values = colvec)+
-            scale_size(range=c(0.1,3),limits = c(0, 40))+
+            scale_colour_gradientn(colours = c("white","goldenrod","darkorange","firebrick","sienna","brown","coral4"),
+                                   values = c(0,clip/4,clip/2,clip,clip*2,clip*4, max(plotdata$value, na.rm = T)))+
+            scale_size("sum(CI)",range=c(1,3),limits = c(0, 40))+
             theme_bw()
+
 
         if(output == "plot"){
             print(p1)
