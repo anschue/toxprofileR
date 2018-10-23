@@ -568,13 +568,18 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
             y = grid$pts[,2])
     }
 
-
+    # clip logFC greater 5/smaller -5
+    if(sum(abs(plotdata$logFC)>5, na.rm = T)>0){
+        message("clipping logFC greater 5/smaller -5")
+        plotdata$logFC[plotdata$logFC>5&!is.na(plotdata$logFC)] <- 5
+        plotdata$logFC[plotdata$logFC< -5&!is.na(plotdata$logFC)] <- -5
+    }
 
     p1 <- ggplot(plotdata, aes(x,y)) +
     geom_point(aes(size=abs(logFC),colour=logFC))+
         labs(x="", y="")+
         scale_colour_distiller(palette = "RdBu",direction = -1, limits=c(-5,5), values = colvec)+
-        scale_size(range=c(0.1, 3))
+        scale_size(range=c(0.1, 3), limits = c(0,5))
         theme_bw()
 
     if(legend){
