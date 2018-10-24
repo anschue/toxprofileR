@@ -9,7 +9,7 @@ plot_portrait(nodelist, tox_universe = NULL, grid = NULL,
   concentration_level, type = c("code", "median", "modeled",
   "parameter"), parameter = NULL, onlysig = c(TRUE, FALSE),
   siglevel = NULL, output = c("plot", "data"), legend = FALSE,
-  clip = NULL)
+  logy = FALSE, colvec = NULL)
 }
 \arguments{
 \item{nodelist}{A nodelist created with toxprofileR::create_nodelist()}
@@ -38,7 +38,9 @@ plot_portrait(nodelist, tox_universe = NULL, grid = NULL,
 
 \item{legend}{logical, should a legend be given out (default: F)}
 
-\item{clip}{value, above which parameter values should be clipped}
+\item{logy}{logical should parameter value be log-scaled}
+
+\item{colvec}{custom vector for colorscale}
 }
 \value{
 either a ggplot printed or ggplot data, depending on the parameter "output"

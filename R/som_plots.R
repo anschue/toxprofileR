@@ -437,20 +437,17 @@ dev.off()
 #' @param output character string, if the output should be plotted ("plot") or plot data should be given as output ("data")
 #' @param legend logical, should a legend be given out (default: F)
 #' @param siglevel vector of significant effect levels
-#' @param clip value, above which parameter values should be clipped
+#' @param logy logical should parameter value be log-scaled
+#' @param colvec custom vector for colorscale
 #'
 #' @return either a ggplot printed or ggplot data, depending on the parameter "output"
 #' @export
 #'
-plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL, time_hpe, concentration_level, type = c("code","median","modeled","parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), siglevel= NULL, output = c("plot","data"), legend = FALSE, clip = NULL, colvec = NULL){
+plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL, time_hpe, concentration_level, type = c("code","median","modeled","parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), siglevel= NULL, output = c("plot","data"), legend = FALSE, logy = FALSE, colvec = NULL){
     library("cowplot")
 
     hill_gauss<-function(dose,time,hillslope,maxS50,mu,sigma,maxGene){
         maxGene/(1+exp(-hillslope*(log(dose)-log(1/((maxS50)*exp(-0.5*(((log(time)-log(mu))/sigma)^2)))))))}
-
-    # colvec_cubic<- scales::rescale(seq(-1,1,length.out = 100)^3)
-    # colvec_logistic <- scales::rescale(1/(1+exp(-10*(seq(0,1,length.out = 100)-0.1))))
-    # colvec_exp <- scales::rescale((seq(0,1,length.out = 100)^5))
 
     if(type == "distances"){
         plotdata <- data.frame(distance = unlist(lapply(seq_len(max(tox_universe$som_model$unit.classif)),function(x){
@@ -505,23 +502,18 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
     }
 
     if(type == "parameter"){
+
         plotdata <- data.frame(value = unlist(tcta_paramframe[, parameter]),
                                x = grid$pts[,1],
                                y = grid$pts[,2],
                                siglevel = siglevel
         )
 
-        #colvec <- seq(0,1,length.out = 1000)
-        if(onlysig){plotdata$value[siglevel==0]<-0}
-        # if(!is.null(clip)){
-        #     roundvalue <- round(clip/(max(plotdata$value)-min(plotdata$value))*1000, digits = 0)
-        #     colvec[1:(1000-roundvalue)]<-seq(0,0.05,length.out = (1000-roundvalue))
-        #     colvec[(1000-roundvalue):1000] <- seq(0.05, 1, length.out = (roundvalue+1))
-        # }
-
+        if(onlysig){plotdata$value[siglevel==0]<-0} # only plot significant toxnodes
+        if(logy == T){plotdata$value <- log10(plotdata$value)}
 
         p1 <- ggplot(plotdata, aes(x,y)) +
-            geom_point(aes(size=abs(siglevel),colour=log(value)))+
+            geom_point(aes(size=abs(siglevel),colour=value))+
             labs(x="", y="")+
             scale_colour_gradientn(colours = c("white","goldenrod","darkorange","firebrick","sienna","brown","coral4"),na.value = "white")+
             scale_size("sum(CI)",range=c(1,3),limits = c(0,40))+
@@ -622,6 +614,7 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
 #' @param parameter Optional, name of parameter to be plotted
 #' @param filename filename to save plot
 #' @param onlysig logical, if reponse should be filtered to signficant values
+#' @param colvec custom scaling for color scale
 #'
 #' @return Saves a fingerprint grid in the given filename
 #' @export

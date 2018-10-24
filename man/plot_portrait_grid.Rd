@@ -7,7 +7,7 @@
 plot_portrait_grid(nodelist, filename, tox_universe = NULL,
   grid = NULL, tcta_paramframe = NULL, substance = NULL,
   type = c("code", "median", "modeled"), parameter = NULL,
-  onlysig = c(TRUE, FALSE))
+  onlysig = c(TRUE, FALSE), colvec = NULL)
 }
 \arguments{
 \item{nodelist}{A nodelist created with toxprofileR::create_nodelist()}
@@ -27,6 +27,8 @@ plot_portrait_grid(nodelist, filename, tox_universe = NULL,
 \item{parameter}{Optional, name of parameter to be plotted}
 
 \item{onlysig}{logical, if reponse should be filtered to signficant values}
+
+\item{colvec}{custom scaling for color scale}
 }
 \value{
 Saves a fingerprint grid in the given filename
