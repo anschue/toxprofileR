@@ -3,13 +3,12 @@
 #' @param elist an EList with logFC data
 #'
 #' @return an EList with smoothed logFC data
+#'
+#' @import limma
+#'
 #' @export
 #'
 spline_fit <- function(elist) {
-  library("mgcv")
-  library("outliers")
-  library("pbapply")
-  library("limma")
 
   # define probe/concentration/time vectors-----------------------------------
   probes <-
