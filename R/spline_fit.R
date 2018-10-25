@@ -85,7 +85,7 @@ spline_fit <- function(elist) {
   })
 
 
-  splineprobes_list <- new(
+  splineprobes_list <- methods::new(
     "EList",
     list(
       E = t(splineprobes),
