@@ -6,10 +6,10 @@
 \usage{
 plot_portrait(nodelist, tox_universe = NULL, grid = NULL,
   tcta_paramframe = NULL, substance = NULL, time_hpe,
-  concentration_level, type = c("code", "median", "modeled",
-  "parameter"), parameter = NULL, onlysig = c(TRUE, FALSE),
-  siglevel = NULL, output = c("plot", "data"), legend = FALSE,
-  logy = FALSE, colvec = NULL)
+  concentration_level, concentration_umol_l = NULL, type = c("code",
+  "median", "modeled", "parameter"), parameter = NULL,
+  onlysig = c(TRUE, FALSE), siglevel = NULL, output = c("plot",
+  "data"), legend = FALSE, logy = FALSE, colvec = NULL)
 }
 \arguments{
 \item{nodelist}{A nodelist created with toxprofileR::create_nodelist()}
@@ -25,6 +25,8 @@ plot_portrait(nodelist, tox_universe = NULL, grid = NULL,
 \item{time_hpe}{Time point to be plotted}
 
 \item{concentration_level}{Concentration level to be plotted}
+
+\item{concentration_umol_l}{concentration for prediction}
 
 \item{type}{character string, type of response to be plotted; Possible values are  "code", "median", "modeled", "parameter"}
 

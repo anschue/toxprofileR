@@ -439,11 +439,12 @@ dev.off()
 #' @param siglevel vector of significant effect levels
 #' @param logy logical should parameter value be log-scaled
 #' @param colvec custom vector for colorscale
+#' @param concentration_umol_l concentration for prediction
 #'
 #' @return either a ggplot printed or ggplot data, depending on the parameter "output"
 #' @export
 #'
-plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL, time_hpe, concentration_level, type = c("code","median","modeled","parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), siglevel= NULL, output = c("plot","data"), legend = FALSE, logy = FALSE, colvec = NULL){
+plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL, time_hpe, concentration_level, concentration_umol_l = NULL, type = c("code","median","modeled","parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), siglevel= NULL, output = c("plot","data"), legend = FALSE, logy = FALSE, colvec = NULL){
     library("cowplot")
 
     hill_gauss<-function(dose,time,hillslope,maxS50,mu,sigma,maxGene){
@@ -539,10 +540,18 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
         }
     }
 
-    # if(type=="modeled"){
-    #     plotdata <- data.frame(logFC=abund.funct(dose = as.numeric(datalist$targets$Concentration..micromol.L.[datalist$targets$Concentration.level==conc][1]),time = timepoint,hillslope = as.numeric(paramlist[,"hillslope_final"]),maxS50 = as.numeric(paramlist[,"maxS50_final"]),mu = as.numeric(paramlist[,"mu_final"]),sigma = as.numeric(paramlist[,"sigma_final"]),maxGene = as.numeric(paramlist[,"maxGene_final_hill"])),x=som_model$grid$pts[,1],y=som_model$grid$pts[,2])
-    # }
-    #
+    if(type=="modeled"){
+         plotdata <- data.frame(logFC = hill_gauss(dose = concentration_umol_l,
+                                                    time = time_hpe,
+                                                    hillslope = as.numeric(tcta_paramframe[,"hillslope_best_hill"]),
+                                                    maxS50 = as.numeric(tcta_paramframe[,"maxS50_best_hill"]),
+                                                    mu = as.numeric(tcta_paramframe[,"mu_best_hill"]),
+                                                    sigma = as.numeric(tcta_paramframe[,"sigma_best_hill"]),
+                                                    maxGene = as.numeric(tcta_paramframe[,"max_best_hill"])),
+                                                    x=grid$pts[,1],
+                                                    y=grid$pts[,2])
+    }
+
 
 
 
