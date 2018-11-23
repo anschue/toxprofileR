@@ -510,7 +510,7 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
                                siglevel = siglevel
         )
 
-        if(onlysig){plotdata$value[siglevel==0]<-0} # only plot significant toxnodes
+        if(onlysig){plotdata$value[siglevel==0]<-NA} # only plot significant toxnodes
         if(logy == T){plotdata$value <- log10(plotdata$value)}
 
         p1 <- ggplot(plotdata, aes(x,y)) +
