@@ -58,6 +58,7 @@ enrich_clusters <- function(cluster_table){
 
     ## ZFIN
     zfin_enrichments <- lapply(cluster_enrichments, function(cluster_enrichment){
+		if(!is.null(cluster_enrichment$zfin)){
         results <- cluster_enrichment$zfin@result
         if(dim(results)[1]>0){
         results$genenr_annot <- unlist(lapply(strsplit(results$GeneRatio, split = "/", fixed = T), function(x){as.numeric(x[2])}))
@@ -66,7 +67,7 @@ enrich_clusters <- function(cluster_table){
         return(results)
         }else{
         return(NULL)        
-        }
+        }} else { return(NULL) }
     })
 
     zfin_enrichments <- do.call("rbind", zfin_enrichments)
@@ -76,6 +77,7 @@ enrich_clusters <- function(cluster_table){
 
     ## GO
     GO_enrichments <- lapply(cluster_enrichments, function(cluster_enrichment){
+        if(!is.null(cluster_enrichment$GO)){
         results <- cluster_enrichment$GO@result
         if(dim(results)[1]>0){
         results$genenr_annot <- unlist(lapply(strsplit(results$GeneRatio, split = "/", fixed = T), function(x){as.numeric(x[2])}))
@@ -84,7 +86,7 @@ enrich_clusters <- function(cluster_table){
         return(results)
         }else{
         return(NULL)        
-        }
+        }} else { return(NULL) }
     })
 
     GO_enrichments <- do.call("rbind", GO_enrichments)
@@ -93,6 +95,7 @@ enrich_clusters <- function(cluster_table){
 
     ## Interpro
     interpro_enrichments <- lapply(cluster_enrichments, function(cluster_enrichment){
+		if(!is.null(cluster_enrichment$interpro)){
         results <- cluster_enrichment$interpro@result
        if(dim(results)[1]>0){
         results$genenr_annot <- unlist(lapply(strsplit(results$GeneRatio, split = "/", fixed = T), function(x){as.numeric(x[2])}))
@@ -101,7 +104,7 @@ enrich_clusters <- function(cluster_table){
         return(results)
         }else{
         return(NULL)        
-        }
+        }} else { return(NULL) }
     })
 
     interpro_enrichments <- do.call("rbind", interpro_enrichments)
@@ -112,6 +115,7 @@ enrich_clusters <- function(cluster_table){
 
     ## reactome
     reactome_enrichments <- lapply(cluster_enrichments, function(cluster_enrichment){
+		if(!is.null(cluster_enrichment$reactome)){
         results <- cluster_enrichment$reactome@result
         if(dim(results)[1]>0){
         results$genenr_annot <- unlist(lapply(strsplit(results$GeneRatio, split = "/", fixed = T), function(x){as.numeric(x[2])}))
@@ -120,7 +124,7 @@ enrich_clusters <- function(cluster_table){
         return(results)
         }else{
         return(NULL)        
-        }
+        }} else { return(NULL) }
     })
 
     reactome_enrichments <- do.call("rbind", reactome_enrichments)
