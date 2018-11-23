@@ -33,3 +33,5 @@ biocViews:
     GenomicRanges (>= 1.30.3),
     oligo (>= 1.42.0),
     arrayQualityMetrics (>= 3.34.0)
+Suggests: 
+    clusterProfiler
