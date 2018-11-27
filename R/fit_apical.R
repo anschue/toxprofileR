@@ -124,7 +124,7 @@ fit_apical <-
         par(mar = c(5.1, 5.1, 1, 1))
         plot((
             responsedf$effect_lethal_count / responsedf$n_testorganism
-        ) * 100 ~ responsedf$concentration_mol_L,
+        ) * 100 ~ responsedf$concentration_umol_L,
         log = "x",
         ylim = c(0, 100),
         type = "n",
@@ -141,7 +141,7 @@ fit_apical <-
             df_t <-
                 responsedf[responsedf$exposure_end_hpf == sort(unique(responsedf$exposure_end_hpf))[t],]
 
-            points((df_t$effect_lethal_count / df_t$n_testorganism) * 100 ~ df_t$concentration_mol_L,
+            points((df_t$effect_lethal_count / df_t$n_testorganism) * 100 ~ df_t$concentration_umol_L,
                    col = t,
                    pch = t,
                    cex = 1.5,
@@ -153,7 +153,7 @@ fit_apical <-
 
             ###Maximum likelihood############
 
-            concentration <- df_t$concentration_mol_L
+            concentration <- df_t$concentration_umol_L
             df_t$effect_count <- df_t$effect_lethal_count
 
             fit_logit_ml = tryCatch({
@@ -197,21 +197,21 @@ fit_apical <-
 
             AIC_logit_ml <-
                 tryCatch({
-                    bbmle::AICc(fit_logit_ml, nobs = length(df_t$percent_effect[df_t$concentration_mol_L >
+                    bbmle::AICc(fit_logit_ml, nobs = length(df_t$percent_effect[df_t$concentration_umol_L >
                                                                                     0]))
                 }, error = function(cond) {
                     return(NA)
                 })
             AIC_wb_ml <-
                 tryCatch({
-                    bbmle::AICc(fit_wb_ml, nobs = length(df_t$percent_effect[df_t$concentration_mol_L >
+                    bbmle::AICc(fit_wb_ml, nobs = length(df_t$percent_effect[df_t$concentration_umol_L >
                                                                                  0]))
                 }, error = function(cond) {
                     return(NA)
                 })
             AIC_gl_ml <-
                 tryCatch({
-                    bbmle::AICc(fit_gl_ml, nobs = length(df_t$percent_effect[df_t$concentration_mol_L >
+                    bbmle::AICc(fit_gl_ml, nobs = length(df_t$percent_effect[df_t$concentration_umol_L >
                                                                                  0]))
                 }, error = function(cond) {
                     return(NA)
@@ -237,13 +237,13 @@ fit_apical <-
                                 t1 = bbmle::coef(fit_logit_ml)["t1"],
                                 t2 = bbmle::coef(fit_logit_ml)["t2"],
                                 concentration = seq(
-                                    min(df_t$concentration_mol_L),
-                                    max(df_t$concentration_mol_L),
+                                    min(df_t$concentration_umol_L),
+                                    max(df_t$concentration_umol_L),
                                     length.out = 2000
                                 )
                             ) * 100 ~ seq(
-                                min(df_t$concentration_mol_L),
-                                max(df_t$concentration_mol_L),
+                                min(df_t$concentration_umol_L),
+                                max(df_t$concentration_umol_L),
                                 length.out = 2000
                             ),
                             col = t,
@@ -263,13 +263,13 @@ fit_apical <-
                                 t1 = bbmle::coef(fit_wb_ml)["t1"],
                                 t2 = bbmle::coef(fit_wb_ml)["t2"],
                                 concentration = seq(
-                                    min(df_t$concentration_mol_L),
-                                    max(df_t$concentration_mol_L),
+                                    min(df_t$concentration_umol_L),
+                                    max(df_t$concentration_umol_L),
                                     length.out = 2000
                                 )
                             ) * 100 ~ seq(
-                                min(df_t$concentration_mol_L),
-                                max(df_t$concentration_mol_L),
+                                min(df_t$concentration_umol_L),
+                                max(df_t$concentration_umol_L),
                                 length.out = 2000
                             ),
                             col = t,
@@ -290,13 +290,13 @@ fit_apical <-
                                 t2 = bbmle::coef(fit_gl_ml)["t2"],
                                 t3 = bbmle::coef(fit_gl_ml)["t3"],
                                 concentration = seq(
-                                    min(df_t$concentration_mol_L),
-                                    max(df_t$concentration_mol_L),
+                                    min(df_t$concentration_umol_L),
+                                    max(df_t$concentration_umol_L),
                                     length.out = 2000
                                 )
                             ) * 100 ~ seq(
-                                min(df_t$concentration_mol_L),
-                                max(df_t$concentration_mol_L),
+                                min(df_t$concentration_umol_L),
+                                max(df_t$concentration_umol_L),
                                 length.out = 2000
                             ),
                             col = t,
@@ -375,7 +375,7 @@ fit_apical <-
 
             df_t <- df_t[!is.na(df_t$effect_sublethal_count),]
 
-            points((df_t$effect_sublethal_count / df_t$n_testorganism) * 100 ~ df_t$concentration_mol_L,
+            points((df_t$effect_sublethal_count / df_t$n_testorganism) * 100 ~ df_t$concentration_umol_L,
                    col = t,
                    pch = (t+length(unique(responsedf$exposure_end_hpf))),
                    cex = 1.5,
@@ -387,7 +387,7 @@ fit_apical <-
 
             ###Maximum likelihood############
 
-            concentration <- df_t$concentration_mol_L
+            concentration <- df_t$concentration_umol_L
             df_t$effect_count <- df_t$effect_sublethal_count
 
             fit_logit_ml = tryCatch({
@@ -429,21 +429,21 @@ fit_apical <-
 
             AIC_logit_ml <-
                 tryCatch({
-                    bbmle::AICc(fit_logit_ml, nobs = length(df_t$percent_effect[df_t$concentration_mol_L >
+                    bbmle::AICc(fit_logit_ml, nobs = length(df_t$percent_effect[df_t$concentration_umol_L >
                                                                                     0]))
                 }, error = function(cond) {
                     return(NA)
                 })
             AIC_wb_ml <-
                 tryCatch({
-                    bbmle::AICc(fit_wb_ml, nobs = length(df_t$percent_effect[df_t$concentration_mol_L >
+                    bbmle::AICc(fit_wb_ml, nobs = length(df_t$percent_effect[df_t$concentration_umol_L >
                                                                                  0]))
                 }, error = function(cond) {
                     return(NA)
                 })
             AIC_gl_ml <-
                 tryCatch({
-                    bbmle::AICc(fit_gl_ml, nobs = length(df_t$percent_effect[df_t$concentration_mol_L >
+                    bbmle::AICc(fit_gl_ml, nobs = length(df_t$percent_effect[df_t$concentration_umol_L >
                                                                                  0]))
                 }, error = function(cond) {
                     return(NA)
@@ -469,13 +469,13 @@ fit_apical <-
                                 t1 = bbmle::coef(fit_logit_ml)["t1"],
                                 t2 = bbmle::coef(fit_logit_ml)["t2"],
                                 concentration = seq(
-                                    min(df_t$concentration_mol_L),
-                                    max(df_t$concentration_mol_L),
+                                    min(df_t$concentration_umol_L),
+                                    max(df_t$concentration_umol_L),
                                     length.out = 2000
                                 )
                             ) * 100 ~ seq(
-                                min(df_t$concentration_mol_L),
-                                max(df_t$concentration_mol_L),
+                                min(df_t$concentration_umol_L),
+                                max(df_t$concentration_umol_L),
                                 length.out = 2000
                             ),
                             col = t,
@@ -495,13 +495,13 @@ fit_apical <-
                                 t1 = bbmle::coef(fit_wb_ml)["t1"],
                                 t2 = bbmle::coef(fit_wb_ml)["t2"],
                                 concentration = seq(
-                                    min(df_t$concentration_mol_L),
-                                    max(df_t$concentration_mol_L),
+                                    min(df_t$concentration_umol_L),
+                                    max(df_t$concentration_umol_L),
                                     length.out = 2000
                                 )
                             ) * 100 ~ seq(
-                                min(df_t$concentration_mol_L),
-                                max(df_t$concentration_mol_L),
+                                min(df_t$concentration_umol_L),
+                                max(df_t$concentration_umol_L),
                                 length.out = 2000
                             ),
                             col = t,
@@ -522,13 +522,13 @@ fit_apical <-
                                 t2 = bbmle::coef(fit_gl_ml)["t2"],
                                 t3 = bbmle::coef(fit_gl_ml)["t3"],
                                 concentration = seq(
-                                    min(df_t$concentration_mol_L),
-                                    max(df_t$concentration_mol_L),
+                                    min(df_t$concentration_umol_L),
+                                    max(df_t$concentration_umol_L),
                                     length.out = 2000
                                 )
                             ) * 100 ~ seq(
-                                min(df_t$concentration_mol_L),
-                                max(df_t$concentration_mol_L),
+                                min(df_t$concentration_umol_L),
+                                max(df_t$concentration_umol_L),
                                 length.out = 2000
                             ),
                             col = t,
