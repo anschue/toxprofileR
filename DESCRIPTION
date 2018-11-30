@@ -23,7 +23,11 @@ Imports:
     plotly (>= 4.8.0),
     plot3D (>= 1.1.1),
     bbmle (>= 1.0.20),
-    ggpubr
+    ggpubr (>= 0.1.8),
+    Matrix (>= 1.2.15),
+    foreign (>= 0.8.71),
+    cluster (>= 2.0.7.1),
+    rpart (>= 4.1.13)
 Remotes: floybix/hydromad
 RoxygenNote: 6.1.0
 biocViews:
@@ -34,4 +38,4 @@ biocViews:
     oligo (>= 1.42.0),
     arrayQualityMetrics (>= 3.34.0)
 Suggests: 
-    clusterProfiler
+    clusterProfiler (>= 3.10.0)
