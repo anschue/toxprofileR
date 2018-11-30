@@ -50,7 +50,6 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
 
     map_data_all_list <-
         pbapply::pblapply(targets_all$name, function(mapname) {
-            message(mapname)
             # retrieve treatment information
             substance <-
                 targets_all$substance[targets_all$name == mapname]
@@ -62,7 +61,6 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
             maplist <- lapply(
                 c(1:3600),
                 FUN = function(node) {
-                    message(node)
                     nodedf <- nl_list[[substance]][[node]]
 
                     if(is.data.frame(nodedf)){
