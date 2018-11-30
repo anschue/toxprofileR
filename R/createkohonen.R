@@ -16,7 +16,7 @@
 #'
 create_tox_universe <-
   function(dslist,
-           logFC_frame,
+             logFC_frame,
              dimens = 60,
              dist.fct = "manhattan",
              alpha = c(0.8, 0.005),
