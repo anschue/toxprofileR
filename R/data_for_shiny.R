@@ -35,6 +35,16 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
         stop("substance names of dslist do not align with names in targetfile")
     }
 
+    nl_list <- lapply(unique(targets_all$substance), function(substance){
+       nodelist <- toxprofileR::create_nodelist(elist = dslist[[substance]], nodeframe = nodeframe)
+       nodelist_ol <- lapply(nodelist, function(nodedf){
+           if(is.data.frame(nodedf)){toxprofileR::remove_outliers(nodedf)}else{return(NA)}
+       })
+       return(nodelist_ol)
+    })
+
+    names(nl_list) <- unique(targets_all$substance)
+
     # 2. create dataframe with all plot data
     message("create map data")
 
@@ -51,20 +61,16 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
             maplist <- lapply(
                 c(1:3600),
                 FUN = function(node) {
-                    probes <-
-                        which(rownames(dslist[[substance]][["E"]]) %in% as.character(nodeframe$ProbeID[nodeframe$toxnode == node]))
-                    samples <-
-                        which(
-                            dslist[[substance]][["targets"]]$time_hpe == time &
-                                dslist[[substance]][["targets"]]$concentration_level == concentration
-                        )
+                    nodedf <- nl_list[[substance]][[node]]
+                    nodedf_treat <- nodedf[nodedf$time_hpe == time &
+                                           nodedf$concentration_level == concentration,]
 
                     data.frame(
                         mapID = mapname,
                         node = node,
                         x = as.numeric(grid$pts[node, "x"]),
                         y = as.numeric(grid$pts[node, "y"]),
-                        logFCmedian = round(median(dslist[[substance]][["E"]][probes, samples], na.rm = T), digits = 2),
+                        logFCmedian = round(median(nodedf_treat$logFC, na.rm = T), digits = 2),
                         logFChill = if (is.data.frame(ci_list[[substance]][[node]])) {
                             ci_list[[substance]][[node]][ci_list[[substance]][[node]][, "concentration_level"] == concentration &
                                                              ci_list[[substance]][[node]][, "time_hpe"] == time, "logFC_hill"]
