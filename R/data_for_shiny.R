@@ -50,6 +50,7 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
 
     map_data_all_list <-
         pbapply::pblapply(targets_all$name, function(mapname) {
+            message(mapname)
             # retrieve treatment information
             substance <-
                 targets_all$substance[targets_all$name == mapname]
@@ -61,16 +62,21 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
             maplist <- lapply(
                 c(1:3600),
                 FUN = function(node) {
+                    message(node)
                     nodedf <- nl_list[[substance]][[node]]
-                    nodedf_treat <- nodedf[nodedf$time_hpe == time &
-                                           nodedf$concentration_level == concentration,]
+
+                    if(is.data.frame(nodedf)){
+                    logFC_median <- median(nodedf$logFC[nodedf$time_hpe == time &
+                                           nodedf$concentration_level == concentration], na.rm = T)
+                    } else {logFC_median <- NA}
+
 
                     data.frame(
                         mapID = mapname,
                         node = node,
                         x = as.numeric(grid$pts[node, "x"]),
                         y = as.numeric(grid$pts[node, "y"]),
-                        logFCmedian = round(median(nodedf_treat$logFC, na.rm = T), digits = 2),
+                        logFCmedian = round(logFC_median, digits = 2),
                         logFChill = if (is.data.frame(ci_list[[substance]][[node]])) {
                             ci_list[[substance]][[node]][ci_list[[substance]][[node]][, "concentration_level"] == concentration &
                                                              ci_list[[substance]][[node]][, "time_hpe"] == time, "logFC_hill"]
