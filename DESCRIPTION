@@ -27,7 +27,8 @@ Imports:
     Matrix (>= 1.2.15),
     foreign (>= 0.8.71),
     cluster (>= 2.0.7.1),
-    rpart (>= 4.1.13)
+    rpart (>= 4.1.13),
+    DT (>= 0.5)
 Remotes: floybix/hydromad
 RoxygenNote: 6.1.0
 biocViews:
