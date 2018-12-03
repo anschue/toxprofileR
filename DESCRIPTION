@@ -31,11 +31,11 @@ Imports:
     rpart (>= 4.1.13),
     DT (>= 0.5),
     limma (>= 3.34.9),
-    sva (>= 3.26.0)
-    biomaRt (>= 2.34.2),
     GenomicRanges (>= 1.30.3),
     oligo (>= 1.42.0),
-    arrayQualityMetrics (>= 3.34.0)
+    arrayQualityMetrics (>= 3.34.0),
+    biomaRt (>= 2.34.2),
+    sva (>= 3.26.0)
 Remotes: floybix/hydromad
 RoxygenNote: 6.1.0
 Suggests: 
