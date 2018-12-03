@@ -9,6 +9,7 @@ Description: This package supplies functions to import, process and analyze time
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+biocViews:
 Imports:
     mgcv (>= 1.8.24),
     outliers (>= 0.14),
@@ -28,15 +29,14 @@ Imports:
     foreign (>= 0.8.71),
     cluster (>= 2.0.7.1),
     rpart (>= 4.1.13),
-    DT (>= 0.5)
-Remotes: floybix/hydromad
-RoxygenNote: 6.1.0
-biocViews:
+    DT (>= 0.5),
     limma (>= 3.34.9),
     sva (>= 3.26.0)
     biomaRt (>= 2.34.2),
     GenomicRanges (>= 1.30.3),
     oligo (>= 1.42.0),
     arrayQualityMetrics (>= 3.34.0)
+Remotes: floybix/hydromad
+RoxygenNote: 6.1.0
 Suggests: 
     clusterProfiler (>= 3.10.0)
