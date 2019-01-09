@@ -362,11 +362,11 @@ fit_apical <-
 
 
 
-    ECx_ml <-
+    ECx_ml_sub <-
       as.data.frame(matrix(nrow = length(
         unique(responsedf$exposure_end_hpf)
       ), ncol = length(seq(0, 1, 0.001))), row.names = make.names(unique(responsedf$exposure_end_hpf)))
-    colnames(ECx_ml) <- seq(0, 1, 0.001)
+    colnames(ECx_ml_sub) <- seq(0, 1, 0.001)
 
     bestmodels_ml_sub <- list()
 
@@ -483,7 +483,7 @@ fit_apical <-
               lwd = 3,
               lty = 2
             )
-            ECx_ml[t, ] <- reverse_logit(
+            ECx_ml_sub[t, ] <- reverse_logit(
               t1 = bbmle::coef(fit_logit_ml)["t1"],
               t2 = bbmle::coef(fit_logit_ml)["t2"],
               effect = seq(0, 1, 0.001)
@@ -509,7 +509,7 @@ fit_apical <-
               lwd = 3,
               lty = 2
             )
-            ECx_ml[t, ] <- reverse_wb(
+            ECx_ml_sub[t, ] <- reverse_wb(
               t1 = bbmle::coef(fit_wb_ml)["t1"],
               t2 = bbmle::coef(fit_wb_ml)["t2"],
               effect = seq(0, 1, 0.001)
@@ -536,7 +536,7 @@ fit_apical <-
               lty = 2,
               lwd = 3
             )
-            ECx_ml[t, ] <- reverse_gl(
+            ECx_ml_sub[t, ] <- reverse_gl(
               t1 = bbmle::coef(fit_gl_ml)["t1"],
               t2 = bbmle::coef(fit_gl_ml)["t2"],
               t3 = bbmle::coef(fit_gl_ml)["t3"],
@@ -549,18 +549,20 @@ fit_apical <-
 
 
     minEC50_sub <- tryCatch({
-      min(ECx_ml["0.5"], na.rm = T)
+      min(ECx_ml_sub["0.5"], na.rm = T)
     }, error = function(cond) {
       return(minEC50_lethal)
     })
-    EC25_sub <- ECx_ml["0.25"][paste0("X", designtime), 1]
-    EC05_sub <- ECx_ml["0.005"][paste0("X", designtime), 1]
+    EC25_sub <- ECx_ml_sub["0.25"][paste0("X", designtime), 1]
+    EC05_sub <- ECx_ml_sub["0.005"][paste0("X", designtime), 1]
 
 
 
     return(
       list(
-        bestmodels_ml = bestmodels_ml,
+        bestmodels = bestmodels_ml,
+        ECx_lethal = ECx_ml,
+        ECx_sublethal = ECx_ml_sub,
         minEC50_lethal = minEC50_lethal,
         minEC50_sublethal = minEC50_sub,
         EC25_lethal = EC25_lethal,
