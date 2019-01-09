@@ -156,9 +156,9 @@ create_shiny_plotlist <- function(dslist, ci_list, grid, nodeframe) {
     ggpubr::get_legend(
       plotlist[[1]] +
         theme(
-          legend.position = "right",
-          legend.direction = "vertical",
-          legend.box = "vertical"
+          legend.position = "bottom",
+          legend.direction = "horizontal",
+          legend.box = "horizontal"
         )
     )
   )
