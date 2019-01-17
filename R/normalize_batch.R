@@ -5,6 +5,7 @@
 #' @param output logical, if output plots should be given
 #'
 #' @return a list of EList objects containing the normalized data
+#' @import limma
 #' @export
 #'
 normalizeBatch <-
