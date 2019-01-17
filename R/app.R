@@ -633,8 +633,9 @@ tfp_browser <- function() {
 
 
                 })
-            }
+
         })
+        }
             shinyApp(ui = ui, server = server)
 
 }
