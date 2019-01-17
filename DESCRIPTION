@@ -35,7 +35,9 @@ Imports:
     oligo (>= 1.42.0),
     arrayQualityMetrics (>= 3.34.0),
     biomaRt (>= 2.34.2),
-    sva (>= 3.26.0)
+    sva (>= 3.26.0),
+    shinycssloaders (>= 0.2.0),
+    shinydashboard (>= 0.7.1)
 Remotes: floybix/hydromad
 RoxygenNote: 6.1.0
 Suggests: 
