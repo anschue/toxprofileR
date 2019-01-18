@@ -149,25 +149,7 @@ tfp_browser <- function() {
             span(
                 "This work was supported by the German Federal Environmental Foundation Scholarship Program and the European Union 7th Framework Programme project SOLUTIONS"
             )
-        ),
-        column(4,
-               div(
-                   img(
-                       src = "ufz.png",
-                       height = 60,
-                       hspace = "10"
-                   ),
-                   img(
-                       src = "dbu.png",
-                       height = 60,
-                       hspace = "10"
-                   ),
-                   img(
-                       src = "solutions.png",
-                       height = 40,
-                       hspace = "10"
-                   )
-               ))))
+        )))
 
 
     ui <- dashboardPage(header,
