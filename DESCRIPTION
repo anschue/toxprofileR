@@ -39,6 +39,6 @@ Imports:
     shinycssloaders (>= 0.2.0),
     shinydashboard (>= 0.7.1)
 Remotes: floybix/hydromad
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests: 
     clusterProfiler (>= 3.10.0)
