@@ -455,11 +455,13 @@ plot_noderesponse <- function(dslist, tcta_list, nodeframe, nodeID, plot3D = TRU
 #' @param logy logical should parameter value be log-scaled
 #' @param colvec custom vector for colorscale
 #' @param concentration_umol_l concentration for prediction
+#' @param CIdiff CIdiff
+#' @param maxSmax maxSmax
 #'
 #' @return either a ggplot printed or ggplot data, depending on the parameter "output"
 #' @export
 #'
-plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL, time_hpe, concentration_level, concentration_umol_l = NULL, type = c("code", "median", "modeled", "parameter"), parameter = NULL, onlysig = c(TRUE, FALSE), siglevel = NULL, output = c("plot", "data"), legend = FALSE, logy = FALSE, colvec = NULL) {
+plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_paramframe = NULL, substance = NULL, time_hpe, concentration_level, concentration_umol_l = NULL, type = c("code", "median", "modeled", "parameter", "animated"), parameter = NULL, onlysig = c(TRUE, FALSE), siglevel = NULL, CIdiff = NULL, output = c("plot", "data"), legend = FALSE, logy = FALSE, colvec = NULL, maxSmax = NULL) {
   library("cowplot")
 
   hill_gauss <- function(dose, time, hillslope, maxS50, mu, sigma, maxGene) {
@@ -537,6 +539,9 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
       plotdata$value <- log10(plotdata$value)
     }
 
+    plotdata$siglevel[plotdata$siglevel>40] <- 40
+
+
     p1 <- ggplot(plotdata, aes(x, y)) +
       geom_point(aes(size = abs(siglevel), colour = value)) +
       labs(x = "", y = "") +
@@ -580,10 +585,108 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
       x = grid$pts[, 1],
       y = grid$pts[, 2]
     )
+
+    if(onlysig){
+    plotdata$maxControl <- unlist(lapply(CIdiff, function(nodediff){
+        if(is.data.frame(nodediff)){
+        nodediff[nodediff[,"time_hpe"]==time_hpe&nodediff[,"concentration_umol_l"]==0,"max_hill"]
+    }else{NA}
+        }))
+
+    plotdata$minControl <- unlist(lapply(CIdiff, function(nodediff){
+        if(is.data.frame(nodediff)){
+            nodediff[nodediff[,"time_hpe"]==time_hpe&nodediff[,"concentration_umol_l"]==0,"min_hill"]
+        }else{NA}
+    }))
+
+
+    plotdata$upr_hill <-
+        plotdata$logFC + (qnorm(0.95) * as.numeric(tcta_paramframe[, "err_best_hill"]))
+    plotdata$lwr_hill <-
+        plotdata$logFC - (qnorm(0.95) * as.numeric(tcta_paramframe[, "err_best_hill"]))
+
+    plotdata$CIdiff <- 0
+
+
+    plotdata$CIdiff <-
+        apply(
+            plotdata,
+            MARGIN = 1,
+            FUN = function(treatment) {
+                if(!is.na(treatment["maxControl"])){
+                if (as.numeric(treatment["lwr_hill"]) > 0) {
+                    dif <-
+                        as.numeric(treatment["lwr_hill"]) - as.numeric(treatment["maxControl"])
+                    dif[dif < 0] <- 0
+                    return(dif)
+                } else {
+                    if (as.numeric(treatment["upr_hill"]) < 0) {
+                        dif <-
+                            as.numeric(treatment["upr_hill"]) - as.numeric(treatment["minControl"])
+                        dif[dif > 0] <- 0
+                        return(dif)
+                    } else {
+                        return(0)
+                    }
+                }
+                } else {NA}
+            }
+        )
+}
+
   }
 
+  if (type == "animated") {
+      library("gganimate")
+  sens<-function(time,maxS50,mu,sigma){maxS50*exp(-0.5*(((log(time)-log(mu))/sigma)^2))}
+  timevector<-emdbook::lseq(from = 3,to = 96,length.out = 50)
 
+  plotlist <- lapply(timevector,function(timep){
 
+  plotdata <- data.frame(
+      S = sens(
+          time = timep,
+          maxS50 = as.numeric(tcta_paramframe[, "maxS50_best_hill"]),
+          mu = as.numeric(tcta_paramframe[, "mu_best_hill"]),
+          sigma = as.numeric(tcta_paramframe[, "sigma_best_hill"])
+      ),
+      time = timep,
+      x = grid$pts[, 1],
+      y = grid$pts[, 2]
+  )
+
+  if (onlysig) {
+      plotdata$S[siglevel == 0] <- NA
+  }
+
+  plotdata
+  })
+
+  plotdata <- do.call("rbind", plotlist)
+
+  plotdata$S[plotdata$S>maxSmax&!is.na(plotdata$S)]<-maxSmax
+
+  p<- ggplot(plotdata, aes(x = x,y = y)) +
+      geom_point(aes(size=S,colour=S))+
+      labs(x="", y="")+
+      scale_colour_distiller(palette = "RdPu", direction=1, limits = c(0,maxSmax), values=c(0,emdbook::lseq(from = 0.1,to = 1,length.out = 10)))+
+      scale_size(limits=c(0,maxSmax))+
+      theme_bw() +
+      theme(
+          plot.background = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.border = element_blank(),
+          axis.text = element_blank(),
+          axis.ticks = element_blank(),
+          legend.position = "none",
+          plot.margin = unit(c(0,0,0,0), "cm")
+      ) +
+      transition_time(timep, range = NULL)
+
+  return(p)
+
+  }
 
 
   if (type == "median") {
@@ -608,12 +711,21 @@ plot_portrait <- function(nodelist, tox_universe = NULL, grid = NULL, tcta_param
     plotdata$logFC[plotdata$logFC < -5 & !is.na(plotdata$logFC)] <- -5
   }
 
+  if(onlysig){
+
   p1 <- ggplot(plotdata, aes(x, y)) +
-    geom_point(aes(size = abs(logFC), colour = logFC)) +
+    geom_point(aes(size = abs(CIdiff), colour = logFC)) +
     labs(x = "", y = "") +
     scale_colour_distiller(palette = "RdBu", direction = -1, limits = c(-5, 5), values = colvec) +
-    scale_size(range = c(0.1, 3), limits = c(0, 5))
-  theme_bw()
+    scale_size(range = c(0.1, 3), limits = c(0, 3))
+  }else{
+      p1 <- ggplot(plotdata, aes(x, y)) +
+          geom_point(aes(size = abs(logFC), colour = logFC)) +
+          labs(x = "", y = "") +
+          scale_colour_distiller(palette = "RdBu", direction = -1, limits = c(-5, 5), values = colvec) +
+          scale_size(range = c(0.1, 3), limits = c(0, 5))
+
+  }
 
   if (legend) {
     p <- p1 + theme(
