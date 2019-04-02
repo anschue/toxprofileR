@@ -4,7 +4,9 @@
 \alias{fit_apical}
 \title{Fit Apical}
 \usage{
-fit_apical(responsedf, plot = T, designtime = 96)
+fit_apical(responsedf, plot = T, designtime = 96,
+  startlogit = list(t1 = -1, t2 = -1), startweibull = list(t1 = 10, t2
+  = 10), startgl = list(t1 = 10, t2 = 10, t3 = 0.01))
 }
 \arguments{
 \item{responsedf}{a dataframe containing effect counts}
@@ -12,6 +14,12 @@ fit_apical(responsedf, plot = T, designtime = 96)
 \item{plot}{logical, if plot should be given}
 
 \item{designtime}{which timepoint should be taken to calculate EC values and designconcentrations}
+
+\item{startlogit}{list of startparameters for logit}
+
+\item{startweibull}{list of startparameters for weibull}
+
+\item{startgl}{list of startparameters for gl}
 }
 \value{
 a list of model fits and designconcentrations

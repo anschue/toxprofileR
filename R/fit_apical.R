@@ -3,13 +3,19 @@
 #' @param responsedf a dataframe containing effect counts
 #' @param plot logical, if plot should be given
 #' @param designtime which timepoint should be taken to calculate EC values and designconcentrations
+#' @param startlogit list of startparameters for logit
+#' @param startweibull list of startparameters for weibull
+#' @param startgl list of startparameters for gl
 #'
 #' @return a list of model fits and designconcentrations
 #' @export
 fit_apical <-
   function(responsedf,
              plot = T,
-             designtime = 96) {
+             designtime = 96,
+           startlogit = list(t1 = -1, t2 = -1),
+           startweibull = list(t1 = 10, t2 = 10),
+           startgl = list(t1 = 10, t2 = 10, t3 = 0.01)) {
     # define alternative models ----------------------------------
 
     ## full model
@@ -161,7 +167,7 @@ fit_apical <-
       fit_logit_ml <- tryCatch({
         bbmle::mle2(
           minuslogl = LL_logit,
-          start = list(t1 = -1, t2 = -1),
+          start = list(t1 = startlogit$t1, t2 = startlogit$t2),
           control = list(maxit = 5000),
           data = df_t
         )
@@ -172,7 +178,7 @@ fit_apical <-
       fit_wb_ml <- tryCatch({
         bbmle::mle2(
           minuslogl = LL_wb,
-          start = list(t1 = 10, t2 = 10),
+          start = list(t1 = startweibull$t1, t2 = startweibull$t2),
           control = list(maxit = 5000),
           data = df_t
         )
@@ -184,9 +190,9 @@ fit_apical <-
         bbmle::mle2(
           minuslogl = LL_gl,
           start = list(
-            t1 = 10,
-            t2 = 10,
-            t3 = 0.01
+            t1 = startgl$t1,
+            t2 = startgl$t2,
+            t3 = startgl$t3
           ),
           control = list(maxit = 5000),
           data = df_t
