@@ -400,7 +400,7 @@ fit_apical <-
       fit_logit_ml <- tryCatch({
         bbmle::mle2(
           minuslogl = LL_logit,
-          start = list(t1 = -1, t2 = -1),
+          start = list(t1 = startlogit$t1, t2 = startlogit$t2),
           control = list(maxit = 5000),
           data = df_t
         )
@@ -410,7 +410,7 @@ fit_apical <-
       fit_wb_ml <- tryCatch({
         bbmle::mle2(
           minuslogl = LL_wb,
-          start = list(t1 = 10, t2 = 10),
+          start = list(t1 = startweibull$t1, t2 = startweibull$t2),
           control = list(maxit = 5000),
           data = df_t
         )
@@ -421,9 +421,9 @@ fit_apical <-
         bbmle::mle2(
           minuslogl = LL_gl,
           start = list(
-            t1 = 10,
-            t2 = 10,
-            t3 = 0.01
+            t1 = startgl$t1,
+            t2 = startgl$t2,
+            t3 = startgl$t3
           ),
           control = list(maxit = 5000),
           data = df_t
