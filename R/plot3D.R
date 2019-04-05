@@ -8,6 +8,8 @@
 #' @param surfacecolor
 #' @param concselect
 #' @param logconc
+#' @param plotmeasurements
+#' @param nodelist
 #'
 #' @return
 #' @export
@@ -19,18 +21,20 @@ plot3D_node <- function(nodeID,
                         timeselect = NULL,
                         concselect = NULL,
                         surfacecolor = "grey",
-                        logconc = FALSE
+                        logconc = FALSE,
+                        plotmeasurements = FALSE,
+                        nodelist = NULL
 ){
 
 D_fit_3D <- data.frame(
     logFC = NA,
     time_hpe = expand.grid(
-        seq(3, 72, length.out = 50),
-        seq(min(concentrations), max(concentrations), length.out = 50)
+        seq(3, 72, length.out = 25),
+        seq(min(concentrations), max(concentrations), length.out = 25)
     )[, 1],
     concentration_umol_l = expand.grid(
-        seq(3, 72, length.out = 50),
-        seq(min(concentrations), max(concentrations), length.out = 50)
+        seq(3, 72, length.out = 25),
+        seq(min(concentrations), max(concentrations), length.out = 25)
     )[, 2]
 
 )
@@ -68,14 +72,31 @@ if(!is.null(timeselect)){
                        lwd = 2, add = T)
     }
 
-plot3D::rect3D(x0 = min(concentrations), y0 = timeselect, z0 = zlim[1], x1 = max(concentrations), z1 = zlim[2],
+    for(time in timeselect){
+plot3D::rect3D(x0 = min(concentrations), y0 = time, z0 = zlim[1], x1 = max(concentrations), z1 = zlim[2],
        bty = "g", facets = TRUE,
-       border = "black", col ="grey", alpha=0.5,
+       border = "black", col ="grey", alpha=0.1,
        lwd = 2, add = T)
+    }
 
 
 
 }
+
+if(plotmeasurements){
+    data_measured <- nodelist[[nodeID]]
+    if(logconc){
+    data_measured$lconc <- log(data_measured$concentration_umol_l)
+    plot3D::scatter3D(z = data_measured$logFC, x = data_measured$lconc, y = data_measured$time_hpe, add = T, col = "grey", pch = 21,cex=1.1)
+    }else{
+
+        plot3D::scatter3D(z = data_measured$logFC, x = data_measured$concentration_umol_l, y = data_measured$time_hpe, add = T, col = "grey", pch = 21,cex=1.1)
+
+}
+
+
+}
+
 plot_3D <- recordPlot()
 return(plot_3D)
 }
