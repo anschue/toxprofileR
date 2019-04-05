@@ -6,10 +6,10 @@
 \usage{
 plot3D_node(nodeID, zlim, concentrations, tcta_paramframe,
   timeselect = NULL, concselect = NULL, surfacecolor = "grey",
-  logconc = FALSE)
+  logconc = FALSE, plotmeasurements = FALSE, nodelist = NULL)
 }
 \arguments{
-\item{logconc}{}
+\item{nodelist}{}
 }
 \description{
 Plot noderesponse as surface

@@ -13,7 +13,7 @@
 #'
 #' @return returns plots of measured and fitted noderesponse
 #' @export
-plot_noderesponse <- function(dslist, tcta_list, nodeframe, nodeID, timeselect, concselect, mixtureranges = NULL, output = "plot",logx = F, plotCIs = F) {
+plot_noderesponse_time <- function(dslist, tcta_list, nodeframe, nodeID, timeselect, concselect, mixtureranges = NULL, output = "plot",logx = F, plotCIs = F) {
     breaksfunction <- function(xlim) {
         df <- (xlim[2] / xlim[1])^(1 / 4)
         breaks <- xlim[2] / df^(c(1, 2, 3))
