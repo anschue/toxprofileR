@@ -10,6 +10,7 @@
 #' @param logconc
 #' @param plotmeasurements
 #' @param nodelist
+#' @param bg.color
 #'
 #' @return
 #' @export
@@ -23,7 +24,8 @@ plot3D_node <- function(nodeID,
                         surfacecolor = "grey",
                         logconc = FALSE,
                         plotmeasurements = FALSE,
-                        nodelist = NULL
+                        nodelist = NULL,
+                        bg.color = "white"
 ){
 
 D_fit_3D <- data.frame(
@@ -51,7 +53,7 @@ D_fit_3D$logFC <- toxprofileR::hill_gauss(
 
 D_fit_3D$lconc <- log(D_fit_3D$concentration_umol_l)
 
-
+par(bg=bg.color)
 
 if(logconc){
     concentrations <- log(concentrations)
@@ -98,5 +100,6 @@ if(plotmeasurements){
 }
 
 plot_3D <- recordPlot()
+par(bg="white")
 return(plot_3D)
 }
