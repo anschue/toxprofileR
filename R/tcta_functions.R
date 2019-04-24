@@ -32,3 +32,16 @@ hill_gauss <- function(dose, time, hillslope, maxS50, mu, sigma, maxGene) {
 gauss_gauss <- function(dose, time, mconc, sconc, mu, sigma, maxGene) {
   maxGene * exp(-((((log(dose) - log(mconc))^2) / (2 * (sconc^2))) + (((log(time) - log(mu))^2) / (2 * (sigma^2)))))
 }
+
+
+#' Sensitivity function
+#'
+#' @param time
+#' @param maxS50
+#' @param mu
+#' @param sigma
+#'
+#' @return
+#' @export
+#'
+sens_t <- function(time, maxS50, mu, sigma){maxS50 * exp(-0.5 * (((log(time) - log(mu)) / sigma)^2))}
