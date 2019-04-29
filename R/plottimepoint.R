@@ -43,16 +43,29 @@ plot_noderesponse_time <- function(dslist, tcta_list, nodeframe, nodeID, timesel
                 elist$targets$time_hpe[elist$targets$type != "recovery"]
 
             concentrations <- sort(unique(conc_all[conc_all != 0]))
+
+
+            if(logx){
             timeconc <-
                 expand.grid(
                     time_hpe = timeselect,
-                    concentration_umol_l = seq(
+                    concentration_umol_l = emdbook::lseq(
                         min(concselect[[substance]]),
                         max(concselect[[substance]]),
                         length.out = 15
                     )
                 )
-
+            }else{
+                timeconc <-
+                    expand.grid(
+                        time_hpe = timeselect,
+                        concentration_umol_l = seq(
+                            min(concselect[[substance]]),
+                            max(concselect[[substance]]),
+                            length.out = 15
+                        )
+                    )
+            }
             # remove outliers -----------------------------------------------------
             outliernew <-
                 as.numeric(outliers::grubbs.test(x = as.numeric(D_measured$logFC))["p.value"])
