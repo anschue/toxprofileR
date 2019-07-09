@@ -426,12 +426,13 @@ plot_noderesponse <- function(dslist, tcta_list, nodeframe, nodeID, plot3D = TRU
   if (output == "plot") {
     print(poiplot_hill)
     print(poiplot_gauss)
-    list3D
+    if(plot3D){list3D}
     return(NULL)
   }
 
   if (output == "data") {
-    return(list(hill = poiplot_hill, gauss = poiplot_gauss, list3D = list3D))
+    if(plot3D){return(list(hill = poiplot_hill, gauss = poiplot_gauss, list3D = list3D))}
+      else{return(list(hill = poiplot_hill, gauss = poiplot_gauss))}
   }
 }
 
