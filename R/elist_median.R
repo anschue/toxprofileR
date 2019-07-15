@@ -75,7 +75,7 @@ elist.median <- function(data) {
   rownames(exprs) <- exprs.df.ag[, 1]
 
   # Construct Elist object
-  data.new <- new(
+  data.new <- methods::new(
     Class = "EList",
     list(
       E = exprs,
